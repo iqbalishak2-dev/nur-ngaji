@@ -207,14 +207,15 @@ table.t td{padding:9px 4px;border-bottom:1px solid var(--line)}
 <div class="toast" id="toast"></div>
 <div id="modal"></div>
 
-<script id="state" type="application/json">{"v":2,"settings":{"teacher":"Ustaz","iqraPages":[32,32,32,32,32,32],"fee":{"amount":50,"dueDay":7,"startMonth":"2026-11","payInfo":""}},"classes":[],"students":[],"sessions":{},"savedAt":0,"fees":{},"calendar":{}}</script>
+<script id="state" type="application/json">{"v":2,"settings":{"teacher":"Nurfatihah","iqraPages":[32,32,32,32,32,32],"fee":{"amount":50,"dueDay":7,"startMonth":"2026-11","payInfo":""}},"classes":[],"students":[],"sessions":{},"savedAt":0,"fees":{},"calendar":{}}</script>
 
 <script>
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.0.1";
 const DATA_KEY = "nur_data";
 let S = JSON.parse(document.getElementById("state").textContent);
 S.settings.fee.startMonth = new Date().toISOString().slice(0,7);
 try { const l = JSON.parse(localStorage.getItem(DATA_KEY) || "null"); if(l && l.students) S = l; } catch(e){}
+if(S.settings && (S.settings.teacher === "Ustaz" || !S.settings.teacher)) S.settings.teacher = "Nurfatihah";
 let dirty = false, saveTimer = null, draft = null, storageOK = true;
 
 /* ---------- helpers ---------- */
@@ -948,7 +949,7 @@ function bind(){
   /* tetapan */
   const setf = $("setform");
   if(setf) setf.onsubmit = e => { e.preventDefault(); const fd = new FormData(setf);
-    S.settings.teacher = fd.get("teacher").trim() || "Ustaz";
+    S.settings.teacher = fd.get("teacher").trim() || "Nurfatihah";
     S.settings.iqraPages = [0,1,2,3,4,5].map(i => Math.max(1, Number(fd.get("ip"+i)) || 30));
     S.settings.fee.amount = Math.max(0, Number(fd.get("feeAmt")) || 0);
     S.settings.fee.dueDay = Math.min(28, Math.max(1, Number(fd.get("dueDay")) || 7));

@@ -1,6 +1,6 @@
 // NUR Ngaji Manager — service worker
 // Naikkan VERSION setiap kali index.html dikemas kini supaya telefon ambil versi baru.
-const VERSION = "nur-ngaji-v1.0.0";
+const VERSION = "nur-ngaji-v1.0.1";
 const SHELL = [
   "./",
   "./index.html",
