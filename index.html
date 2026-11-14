@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NUR Ngaji Manager</title>
+<meta name="theme-color" content="#1d2622">
+<meta name="description" content="Rekod ngaji, kehadiran, kemajuan dan yuran kelas mengaji">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NUR Ngaji">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f2ec;--card:#fff;--ink:#1c2420;--mute:#6c736e;--line:#e7e3d8;
+  --dark:#1d2622;--yellow:#f5c932;--yellow-2:#fff5cc;--yellow-ink:#5b4500;
+  --green:#1f8a4c;--green-2:#e1f3e7;--red:#d0453c;--red-2:#fbe4e2;--amber:#c27c0e;--amber-2:#fdf0d8;
+  --blue:#2f6aa6;--blue-2:#e3eefa;--pink:#d4607e;--pink-2:#fbe6ec;--r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.top{position:sticky;top:0;z-index:5;background:var(--dark);color:#fff;padding-top:env(safe-area-inset-top)}
+.top .in{max-width:760px;margin:0 auto;height:56px;display:flex;align-items:center;gap:8px;padding:0 10px}
+.top h1{flex:1;margin:0;font-size:17px;font-weight:700;text-align:center}
+.top .brand{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px}
+.top .brand b{color:var(--yellow)}
+.top .tb{width:40px;height:40px;border:0;background:transparent;color:#fff;font-size:22px;border-radius:10px;display:grid;place-items:center}
+.wrap{max-width:760px;margin:0 auto;padding:14px 14px 150px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.mute{color:var(--mute);font-size:13px}
+.h2{font-weight:700;font-size:16px;margin:16px 2px 10px}
+.hello{background:var(--yellow-2);border:1px solid #f1df95;border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.hello .t{font-size:13.5px;color:var(--yellow-ink)}
+.hello .n{font-size:20px;font-weight:800}
+.classcard{background:var(--yellow);border:0;border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-bottom:8px;color:var(--ink)}
+.classcard .ic{width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;flex:none}
+.classcard b{display:block}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
+.tile .v{font-size:22px;font-weight:800;line-height:1.2}
+.tile .l{font-size:11px;color:var(--mute);line-height:1.2}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.qa button{border:0;border-radius:14px;padding:14px 4px 10px;font-size:12.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px}
+.qa svg{width:28px;height:28px}
+.av{width:42px;height:42px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;font-size:14px}
+.av.P{background:var(--pink-2);color:var(--pink)}
+.av.L{background:var(--blue-2);color:var(--blue)}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.iqra{background:var(--yellow-2);color:var(--yellow-ink)}
+.pill.quran{background:var(--green-2);color:var(--green)}
+.pill.cls{background:#f1efe8;color:var(--mute)}
+.pill.L{background:var(--green-2);color:var(--green)}
+.pill.S{background:var(--yellow-2);color:var(--yellow-ink)}
+.pill.U{background:var(--red-2);color:var(--red)}
+.pill.none{background:#f1efe8;color:var(--mute)}
+.li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border-bottom:0}
+.li .grow{flex:1;min-width:0}
+.li .nm{font-weight:700;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:var(--mute);font-size:20px}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 12px;margin-bottom:10px}
+.search input{flex:1;border:0;outline:0;padding:11px 0;background:transparent}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.chips button{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 13px;font-weight:600;font-size:13px;white-space:nowrap}
+.chips button.on{background:var(--yellow);border-color:var(--yellow)}
+.fab{position:fixed;right:max(18px,calc(50% - 362px));bottom:92px;width:56px;height:56px;border-radius:50%;border:0;background:var(--yellow);font-size:30px;box-shadow:0 4px 14px rgba(0,0,0,.18);z-index:4}
+.att{display:flex;gap:6px}
+.att button{width:38px;height:38px;border-radius:50%;border:0;background:#efede6;color:#9a9f9b;display:grid;place-items:center}
+.att button svg{width:18px;height:18px}
+.att .H.on{background:var(--green);color:#fff}
+.att .T.on{background:var(--red);color:#fff}
+.att .C.on{background:var(--amber);color:#fff}
+.reclink{border:0;background:none;padding:2px 0;font-size:12.5px;font-weight:600;color:var(--green)}
+.btn{border:0;background:var(--yellow);color:var(--ink);border-radius:12px;padding:13px 16px;font-weight:700;width:100%;font-size:15.5px}
+.btn.green{background:var(--green);color:#fff}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink)}
+.btn.danger{background:transparent;border:1.5px solid var(--red);color:var(--red)}
+.btn.sm{width:auto;padding:8px 13px;font-size:13.5px;border-radius:10px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:#ebe8df;border-radius:10px;padding:9px 4px;font-weight:600;font-size:13.5px;color:var(--mute)}
+.tabs button.on{background:var(--yellow);color:var(--ink)}
+.frow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.frow>label{width:96px;flex:none;font-weight:600;font-size:14px}
+.frow .ctl{flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12.5px;color:var(--mute);font-weight:600}
+input[type=text],input[type=tel],input[type=number],input[type=time],input[type=date],select,textarea{border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#fff;min-width:0;width:100%}
+textarea{resize:vertical;min-height:70px}
+.radio{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px;font-weight:600;display:flex;align-items:center;gap:8px;justify-content:center}
+.radio i{width:16px;height:16px;border-radius:50%;border:2px solid #b9bdb9;display:inline-block}
+.radio.on{border-color:var(--yellow);background:var(--yellow-2)}
+.radio.on i{border:5px solid var(--ink)}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden;flex:1}
+.stepper button{border:0;background:#f3f1ea;width:36px;height:42px;font-size:18px;flex:none}
+.stepper input{border:0;border-radius:0;text-align:center;padding:9px 0;width:100%}
+.stbtn{display:flex;gap:8px}
+.stbtn button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 4px;font-weight:700;font-size:14px}
+.stbtn .L.on{background:var(--green);border-color:var(--green);color:#fff}
+.stbtn .S.on{background:var(--yellow);border-color:var(--yellow)}
+.stbtn .U.on{background:var(--red);border-color:var(--red);color:#fff}
+.progress{height:12px;background:#e6e3da;border-radius:99px;overflow:hidden;flex:1}
+.progress i{display:block;height:100%;background:var(--green);border-radius:99px}
+.poscard{background:var(--green-2);border-radius:14px;padding:14px}
+.journey{position:relative;padding-left:4px}
+.js{display:flex;align-items:center;gap:12px;padding:8px 0;position:relative}
+.js .dot{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;z-index:1}
+.js .dot.done{background:var(--green);color:#fff}
+.js .dot.now{background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blue-2)}
+.js .dot.todo{background:#fff;border:2px solid #c9ccc8}
+.js:not(:last-child)::after{content:"";position:absolute;left:11px;top:30px;bottom:-10px;width:2px;background:#d7dad6}
+.js .t{font-weight:700;width:76px}
+.tl{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.tl:last-child{border-bottom:0}
+.tl .d{width:78px;flex:none;color:var(--mute);font-size:12.5px}
+.rpt{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.rpt .hd{background:#196b3d;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.rpt .hd b{font-size:17px}
+.rpt .bd{padding:14px 16px}
+.rpt .ln{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.rpt .ln:last-child{border-bottom:0}
+.wa{display:flex;align-items:center;justify-content:center;gap:8px;background:#1f9d55;color:#fff;border-radius:12px;padding:13px;font-weight:700;text-decoration:none;margin-top:12px}
+.legend{display:flex;flex-direction:column;gap:10px;flex:1}
+.legend div{display:flex;align-items:center;gap:8px;font-size:14px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend b{margin-left:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mgrid div{border:1px solid var(--line);border-radius:12px;padding:12px 6px;text-align:center;font-size:12.5px;font-weight:600;color:#9a9f9b;background:#faf9f5}
+.daypick{display:flex;gap:5px;flex-wrap:wrap}
+.daypick button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 9px;font-size:13px;font-weight:600}
+.daypick button.on{background:var(--yellow);border-color:var(--yellow)}
+.datebar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.datebar input{flex:1}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;width:42px;height:42px;font-size:18px;flex:none}
+.bnav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+.bnav .in{max-width:760px;margin:0 auto;display:flex;padding:6px 6px}
+.bnav button{flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--mute);padding:6px 2px;border-radius:12px}
+.bnav button svg{width:22px;height:22px}
+.bnav button.on{background:var(--yellow);color:var(--ink)}
+.savebar{display:none!important;position:fixed;left:0;right:0;bottom:64px;padding:0 12px calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;transform:translateY(200%);transition:transform .2s;z-index:5;pointer-events:none}
+.savebar.show{transform:none}
+.savebar .in{max-width:736px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--dark);color:#fff;border-radius:14px;padding:10px 10px 10px 14px;pointer-events:auto;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.savebar .btn{width:auto;padding:9px 16px}
+.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:9px 14px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.show{opacity:1}
+.empty{text-align:center;padding:26px 10px;color:var(--mute)}
+.bottomact{margin-top:14px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:10;display:flex;align-items:flex-end;justify-content:center}
+.sheet .box{background:#fff;border-radius:18px 18px 0 0;padding:18px;width:100%;max-width:760px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th{text-align:left;color:var(--mute);font-weight:600;font-size:12px;padding:6px 4px;border-bottom:1px solid var(--line)}
+table.t td{padding:9px 4px;border-bottom:1px solid var(--line)}
+.feehead{background:var(--dark);color:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px}
+.feehead .big{font-size:26px;font-weight:800}
+.feehead .progress{background:rgba(255,255,255,.18)}
+.feehead .progress i{background:var(--yellow)}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mnav button{border:0;background:rgba(255,255,255,.12);color:#fff;width:36px;height:36px;border-radius:10px;font-size:18px}
+.pill.paid{background:var(--green-2);color:var(--green)}
+.pill.due{background:var(--red-2);color:var(--red)}
+.pill.free{background:#efe7fb;color:#7b53c1}
+.methods{display:flex;gap:6px;flex-wrap:wrap}
+.methods button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-weight:600;font-size:13.5px}
+.methods button.on{border-color:var(--yellow);background:var(--yellow-2)}
+.sheet .box{max-height:88vh;overflow:auto}
+.feecard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:12px;width:100%;text-align:left}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .wd{text-align:center;font-size:11.5px;font-weight:700;color:var(--mute);padding:4px 0}
+.cal .c{border:0;background:#faf9f5;border-radius:10px;min-height:62px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:600;font-size:14px;min-width:0;overflow:hidden}
+.cal .lbls{display:flex;flex-direction:column;gap:2px;width:100%}
+.cal .lb{display:block;font-size:9.5px;line-height:1.25;font-weight:700;border-radius:4px;padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.lb.st-held{background:var(--green);color:#fff}.lb.st-plan{background:var(--yellow);color:var(--ink)}.lb.st-ganti{background:var(--blue);color:#fff}.lb.st-cancel{background:var(--red-2);color:var(--red);text-decoration:line-through}.lb.st-miss{background:#e4e5e1;color:#6c736e}
+.cal .c.sel .lb{box-shadow:0 0 0 1px rgba(255,255,255,.6)}
+@media (min-width:600px){.cal .lb{font-size:11px;padding:2px 5px}.cal .c{min-height:72px}}
+.cal .c.out{visibility:hidden}
+.cal .c.today{box-shadow:inset 0 0 0 2px var(--yellow)}
+.cal .c.sel{background:var(--dark);color:#fff}
+.cal .dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.cal .dots i{width:7px;height:7px;border-radius:50%;display:block}
+.st-held{background:var(--green)}.st-plan{background:var(--yellow)}.st-cancel{background:var(--red)}.st-ganti{background:var(--blue)}.st-miss{background:#b9bdb9}
+.calleg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-top:10px}
+.calleg span{display:flex;align-items:center;gap:5px}
+.calleg i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.sess{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.sess.cancel{background:var(--red-2);border-color:#f1c4bf}
+.sess.ganti{background:var(--blue-2);border-color:#c4d8ee}
+.reasons{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.reasons button{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:7px 12px;font-weight:600;font-size:13px}
+.reasons button.on{border-color:var(--yellow);background:var(--yellow-2)}
+@media (max-width:400px){.tile .v{font-size:19px}.qa button{font-size:11.5px}.frow>label{width:82px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="in" id="topbar"></div></div>
+<div class="wrap"><main id="app"></main></div>
+<div class="savebar" id="savebar"><div class="in"><span id="savemsg">Ada perubahan belum disimpan</span><button class="btn" id="savebtn">Simpan</button></div></div>
+<nav class="bnav"><div class="in" id="bnav"></div></nav>
+<div class="toast" id="toast"></div>
+<div id="modal"></div>
+
+<script id="state" type="application/json">{"v":2,"settings":{"teacher":"Ustaz","iqraPages":[32,32,32,32,32,32],"fee":{"amount":50,"dueDay":7,"startMonth":"2026-11","payInfo":""}},"classes":[],"students":[],"sessions":{},"savedAt":0,"fees":{},"calendar":{}}</script>
+
+<script>
+const APP_VERSION = "1.0.0";
+const DATA_KEY = "nur_data";
+let S = JSON.parse(document.getElementById("state").textContent);
+S.settings.fee.startMonth = new Date().toISOString().slice(0,7);
+try { const l = JSON.parse(localStorage.getItem(DATA_KEY) || "null"); if(l && l.students) S = l; } catch(e){}
+let dirty = false, saveTimer = null, draft = null, storageOK = true;
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+const iso = d => { const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0,10); };
+const today = () => iso(new Date());
+const addDays = (s, n) => { const d = new Date(s + "T00:00"); d.setDate(d.getDate() + n); return iso(d); };
+const BULAN = ["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"];
+const BULAN_P = ["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"];
+const HARI = ["Ahad","Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu"];
+const fmt = s => { const [y,m,d] = s.split("-").map(Number); return `${d} ${BULAN[m-1]} ${y}`; };
+const dayName = s => HARI[new Date(s + "T00:00").getDay()];
+const t12 = t => { if(!t) return ""; let [h,m] = t.split(":").map(Number); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; return `${h}:${String(m).padStart(2,"0")} ${ap}`; };
+const initials = n => String(n).replace(/^Contoh:\s*/,"").split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join("") || "?";
+const STATUS = {L:"Lulus", S:"Separuh", U:"Ulang"};
+const ym = () => today().slice(0,7);
+const addMonth = (m, n) => { let [y, mo] = m.split("-").map(Number); mo += n; y += Math.floor((mo-1)/12); mo = ((mo-1)%12+12)%12+1; return `${y}-${String(mo).padStart(2,"0")}`; };
+const monthLabel = m => { const [y, mo] = m.split("-").map(Number); return `${BULAN_P[mo-1]} ${y}`; };
+const rm = n => "RM " + (Math.round(Number(n||0)*100)/100).toFixed(2).replace(/\.00$/,"");
+const METHODS = ["Tunai","Pindahan bank","DuitNow QR"];
+const QURAN_PAGES = 604;
+const ICON = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>',
+  board:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9h4M7 13h6M15 9h2"/><path d="M8 21h8"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="12" width="3.5" height="8" rx="1"/><rect x="10.2" y="6" width="3.5" height="14" rx="1"/><rect x="16.5" y="9" width="3.5" height="11" rx="1"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 6.5C10 5 6.5 4.5 3 5v13.5c3.5-.5 7 0 9 1.5 2-1.5 5.5-2 9-1.5V5c-3.5-.5-7 0-9 1.5z"/><path d="M12 6.5V20"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7z"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.4 1.8 2.2 1.2 1.1 2.3 1.4 2.6 1.6.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>'
+};
+
+/* ---------- migrate old format ---------- */
+function migrate(){
+  if(S.v === 2) return;
+  S.v = 2;
+  S.settings = S.settings || {teacher:"Ustaz", iqraPages:[32,32,32,32,32,32]};
+  S.classes = S.classes || [{id:"k1",name:"Kelas A",days:[1,2,3,4],start:"19:45",end:"20:45"}];
+  S.students.forEach(s => { s.gender = s.gender || "L"; s.classId = s.classId || (S.classes[0]||{}).id; });
+  for(const d in S.sessions) for(const id in S.sessions[d].rec){ const r = S.sessions[d].rec[id]; if(r.from == null){ r.from = r.to = r.page; delete r.page; } }
+  ensureFee();
+}
+function ensureFee(){
+  S.settings.fee = S.settings.fee || {amount:50, dueDay:7, startMonth:today().slice(0,7), payInfo:""};
+  S.fees = S.fees || {};
+  S.calendar = S.calendar || {};
+  S.students.forEach(st => { if(!st.joined) st.joined = S.settings.fee.startMonth; });
+}
+migrate(); ensureFee();
+
+/* ---------- UI state (this device only) ---------- */
+const ui = (() => { try { return JSON.parse(localStorage.getItem("nur_ui") || "{}"); } catch(e){ return {}; } })();
+ui.screen = ui.screen || "utama"; ui.p = ui.p || {};
+function saveUI(){ try { localStorage.setItem("nur_ui", JSON.stringify(ui)); } catch(e){} }
+function go(screen, p = {}){ ui.screen = screen; ui.p = p; if(screen !== "rekod") draft = null; saveUI(); render(); window.scrollTo(0,0); }
+
+/* ---------- domain ---------- */
+const student = id => S.students.find(s => s.id === id);
+const klass = id => S.classes.find(c => c.id === id);
+const pagesOf = (level, book) => level === "quran" ? QURAN_PAGES : (Number(S.settings.iqraPages[book-1]) || 30);
+const posText = p => !p ? "-" : p.level === "iqra" ? `Iqra' ${p.book} m/s ${p.from ?? p.page}${p.to && p.to != p.from ? "–" + p.to : ""}` : `Al-Quran m/s ${p.from ?? p.page}${p.to && p.to != p.from ? "–" + p.to : ""}`;
+const lvlPill = s => s.level === "iqra" ? `<span class="pill iqra">Iqra' ${s.book}</span>` : `<span class="pill quran">Al-Quran</span>`;
+const sess = d => S.sessions[d] || {att:{}, rec:{}};
+function sessW(d){ if(!S.sessions[d]) S.sessions[d] = {att:{}, rec:{}}; return S.sessions[d]; }
+const dates = () => Object.keys(S.sessions).sort();
+function recs(id){ return dates().filter(d => S.sessions[d].rec[id]).map(d => ({...S.sessions[d].rec[id], date:d})); }
+function lastRec(id, before){ const r = recs(id).filter(x => !before || x.date < before); return r[r.length-1] || null; }
+/* where a student stands now: level, book, page (last page read) */
+function current(st){
+  const r = lastRec(st.id);
+  if(!r) return {level:st.level, book:st.book, page:st.page, fresh:true};
+  return {level:r.level, book:r.book, page:r.to, status:r.status};
+}
+/* suggested start for a date */
+function startFor(st, date){
+  const r = lastRec(st.id, date);
+  if(!r) return {level:st.level, book:st.book, from:st.page, to:st.page};
+  let {level, book} = r, p = Number(r.to);
+  if(r.status === "L"){
+    p++;
+    if(p > pagesOf(level, book)){
+      if(level === "iqra" && book < 6){ book++; p = 1; } else if(level === "iqra"){ level = "quran"; book = 1; p = 1; } else p = QURAN_PAGES;
+    }
+  } else p = Number(r.from);
+  return {level, book, from:p, to:p};
+}
+function pct(pos){ return Math.min(100, Math.round(pos.page / pagesOf(pos.level, pos.book) * 100)); }
+function absIndex(level, book, page){ const ip = S.settings.iqraPages.map(Number); return level === "quran" ? ip.reduce((a,b)=>a+b,0) + Number(page) : ip.slice(0, book-1).reduce((a,b)=>a+b,0) + Number(page); }
+/* ---------- yuran ---------- */
+function feeOf(st){ return st.fee !== undefined && st.fee !== null && st.fee !== "" ? Number(st.fee) : Number(S.settings.fee.amount); }
+function payment(st, m){ return (S.fees[m] || {})[st.id]; }
+function activeIn(st, m){ return (st.joined || S.settings.fee.startMonth) <= m; }
+function owes(st, m){ return activeIn(st, m) && m >= S.settings.fee.startMonth && feeOf(st) > 0 && !payment(st, m); }
+function arrears(st, upto = ym()){ const out = []; let m = st.joined > S.settings.fee.startMonth ? st.joined : S.settings.fee.startMonth; let g = 0; while(m <= upto && g++ < 120){ if(owes(st, m)) out.push(m); m = addMonth(m, 1); } return out; }
+function monthSummary(m){
+  let due = 0, got = 0, paid = 0, unpaid = 0, free = 0;
+  S.students.forEach(st => { if(!activeIn(st, m)) return; const f = feeOf(st), p = payment(st, m);
+    if(f <= 0 && !p){ free++; return; } due += f; if(p){ paid++; got += Number(p.amt); } else unpaid++; });
+  return {due, got, paid, unpaid, free, pct: due ? Math.min(100, Math.round(got/due*100)) : 0};
+}
+function waNum(phone){ let p = String(phone||"").replace(/\D/g,""); if(p.startsWith("0")) p = "6" + p; return p; }
+function reminderText(st){
+  const ar = arrears(st), total = ar.reduce((a, m) => a + feeOf(st), 0), nm = st.name.replace(/^Contoh:\s*/,"");
+  return `Assalamualaikum. Peringatan mesra yuran mengaji ${nm}:\n\n${ar.map(m => `• ${monthLabel(m)}: ${rm(feeOf(st))}`).join("\n")}\n\nJumlah: ${rm(total)}${S.settings.fee.payInfo ? `\n\nBayaran boleh dibuat ke:\n${S.settings.fee.payInfo}` : ""}\n\nAbaikan jika sudah membayar. Terima kasih.\n— ${S.settings.teacher}`;
+}
+function receiptText(st, m){
+  const p = payment(st, m), nm = st.name.replace(/^Contoh:\s*/,"");
+  return `RESIT YURAN MENGAJI\nNo: ${p.no}\n\nMurid: ${nm}\nBulan: ${monthLabel(m)}\nJumlah: ${rm(p.amt)}\nTarikh bayar: ${fmt(p.date)}\nKaedah: ${p.method}${p.note ? `\nCatatan: ${p.note}` : ""}\n\nTerima kasih. Jazakallahu khairan.\n— ${S.settings.teacher}`;
+}
+
+function classStudents(cid){ return cid && cid !== "all" ? S.students.filter(s => s.classId === cid) : S.students; }
+/* ---------- kalender ---------- */
+function shortName(c){ return (c.short && c.short.trim()) || String(c.name).replace(/^kelas\s+/i, "") || c.name; }
+function calDay(d){ return S.calendar[d] || {cancel:{}, extra:[]}; }
+function calDayW(d){ if(!S.calendar[d]) S.calendar[d] = {cancel:{}, extra:[]}; const c = S.calendar[d]; c.cancel = c.cancel || {}; c.extra = c.extra || []; return c; }
+function cleanCal(d){ const c = S.calendar[d]; if(c && !Object.keys(c.cancel||{}).length && !(c.extra||[]).length) delete S.calendar[d]; }
+/* all class sessions on a date: regular (by weekday) + ganti/tambahan */
+function sessionsOn(d){
+  const wd = new Date(d + "T00:00").getDay(), cd = calDay(d), out = [];
+  S.classes.forEach(c => { if((c.days||[]).includes(wd)) out.push({cls:c, start:c.start, end:c.end, type:"biasa", cancelled:(cd.cancel||{})[c.id] || null}); });
+  (cd.extra||[]).forEach(x => { const c = klass(x.classId); if(c) out.push({cls:c, start:x.start, end:x.end, type:"ganti", note:x.note, xid:x.id, cancelled:null}); });
+  return out.sort((a,b) => (a.start||"").localeCompare(b.start||""));
+}
+function held(cid, d){ const s = S.sessions[d]; return !!s && classStudents(cid).some(st => s.att[st.id]); }
+function sessStatus(x, d){ if(x.cancelled) return "cancel"; if(held(x.cls.id, d)) return "held"; if(x.type === "ganti") return "ganti"; return d < today() ? "miss" : "plan"; }
+const ST_LABEL = {held:"Diadakan", plan:"Dijadualkan", cancel:"Dibatalkan", ganti:"Kelas ganti", miss:"Tiada rekod"};
+function todaysClasses(){ return sessionsOn(today()).filter(x => !x.cancelled).map(x => ({...x.cls, start:x.start, end:x.end, ganti:x.type === "ganti"})); }
+
+/* ---------- saving (dalam peranti) ---------- */
+function markDirty(){ dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(() => save(true), 300); }
+function toast(t){ const el = $("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1800); }
+function save(silent){
+  clearTimeout(saveTimer);
+  for(const d of Object.keys(S.sessions)){ const s = S.sessions[d]; if(!Object.keys(s.att).length && !Object.keys(s.rec).length) delete S.sessions[d]; }
+  S.savedAt = Date.now();
+  try { localStorage.setItem(DATA_KEY, JSON.stringify(S)); dirty = false; storageOK = true; if(!silent) toast("Disimpan ✓"); }
+  catch(e){ storageOK = false; toast("Gagal simpan — storan penuh atau disekat"); }
+  saveUI();
+}
+function needsBackup(){ if(!S.students.length) return false; const b = S.settings.lastBackup || 0; return Date.now() - b > 7*864e5; }
+function backupFile(){
+  S.settings.lastBackup = Date.now(); save(true);
+  const blob = new Blob([JSON.stringify(S, null, 1)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `nur-ngaji-sandaran-${today()}.json`;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  toast("Fail sandaran dimuat turun"); render();
+}
+function restoreData(d){
+  if(!d || !Array.isArray(d.students) || !d.sessions) throw new Error("bad");
+  S = d; migrate(); ensureFee(); save(true); render(); toast("Data dipulihkan ✓");
+}
+
+/* ---------- chrome ---------- */
+const NAV = [["utama","Utama",ICON.home],["murid","Murid",ICON.user],["kelas","Kelas",ICON.board],["laporan","Laporan",ICON.chart],["tetapan","Tetapan",ICON.gear]];
+const NAV_OF = {utama:"utama",murid:"murid",profil:"murid",editmurid:"murid",kelas:"kelas",hadir:"kelas",rekod:"kelas",editkelas:"kelas",laporan:"laporan",yuran:"laporan",tetapan:"tetapan"};
+function topbar(title, back){
+  $("topbar").innerHTML = (back ? `<button class="tb" id="tbBack">←</button>` : `<span style="width:40px"></span>`) +
+    (title ? `<h1>${esc(title)}</h1>` : `<div class="brand"><span style="color:var(--yellow);display:grid">${ICON.book.replace('<svg','<svg width="26" height="26"')}</span><span><b>NUR</b> Ngaji Manager</span></div>`) +
+    `<span style="width:40px"></span>`;
+  if(back) $("tbBack").onclick = back;
+}
+function bnav(){
+  const cur = NAV_OF[ui.screen];
+  $("bnav").innerHTML = NAV.map(([k,l,ic]) => `<button data-nav="${k}" class="${cur===k?"on":""}">${ic}<span>${l}</span></button>`).join("");
+  $("bnav").querySelectorAll("[data-nav]").forEach(b => b.onclick = () => { if(draft && !confirmLeave()) return; go(b.dataset.nav); });
+}
+function confirmLeave(){ draft = null; return true; }
+
+/* ---------- screens ---------- */
+const V = {};
+
+V.utama = () => {
+  topbar(null);
+  const d = today(), s = sess(d), att = Object.values(s.att);
+  const H = att.filter(x => x === "H").length, T = att.filter(x => x === "T").length;
+  const tc = todaysClasses(), tcCancel = sessionsOn(d).filter(x => x.cancelled);
+  const belum = S.students.filter(st => s.att[st.id] === "H" && !s.rec[st.id]);
+  return `
+  <div class="hello"><div class="av ${"L"}" style="width:54px;height:54px;background:#fff;color:var(--yellow-ink);font-size:18px">${initials(S.settings.teacher)}</div>
+    <div><div class="t">Assalamualaikum,</div><div class="n">${esc(S.settings.teacher)}</div></div></div>
+  ${!S.classes.length ? `<div class="card" style="border-color:var(--yellow);background:var(--yellow-2)"><b>Selamat datang!</b><div class="mute" style="margin:4px 0 10px">Mula dengan tambah kelas anda, kemudian tambah murid.</div><button class="btn sm" id="startKelas">+ Tambah kelas pertama</button></div>` : ""}
+  ${needsBackup() ? `<div class="card row" style="border-color:#f1c4bf;background:var(--red-2)"><div class="grow"><b>Sandaran data</b><div class="mute">${S.settings.lastBackup ? "Sandaran terakhir " + fmt(iso(S.settings.lastBackup)) : "Belum pernah buat sandaran"}. Data hanya disimpan dalam peranti ini.</div></div><button class="btn sm" id="bkNow">Sandar</button></div>` : ""}
+  <div class="row between" style="margin:0 2px 8px"><b>Kelas Hari Ini</b><span class="mute">${dayName(d)}, ${fmt(d)}</span></div>
+  ${tc.length ? tc.map(c => `<button class="classcard" data-hadir="${c.id}"><span class="ic">${ICON.play}</span><span style="flex:1"><b>${esc(c.name)}${c.ganti ? " · Kelas ganti" : ""}</b><span style="font-size:13px">${t12(c.start)} – ${t12(c.end)} · ${classStudents(c.id).length} murid</span></span><span style="font-size:20px">›</span></button>`).join("")
+    : `<button class="classcard" data-hadir="all" style="background:var(--yellow-2)"><span class="ic">${ICON.play}</span><span style="flex:1"><b>Tiada kelas dijadualkan hari ini</b><span style="font-size:13px">Tekan untuk buka kehadiran juga</span></span><span style="font-size:20px">›</span></button>`}
+  ${tcCancel.map(x => `<div class="sess cancel" style="margin:0 0 8px"><b>${esc(x.cls.name)}</b> dibatalkan hari ini<div class="mute">Sebab: ${esc(x.cancelled)}</div></div>`).join("")}
+  <div class="tiles" style="margin-top:6px">
+    <div class="tile"><div class="v" style="color:var(--blue)">${S.students.length}</div><div class="l">Jumlah Murid</div></div>
+    <div class="tile"><div class="v" style="color:var(--green)">${H}</div><div class="l">Hadir Hari Ini</div></div>
+    <div class="tile"><div class="v" style="color:var(--red)">${T}</div><div class="l">Tidak Hadir</div></div>
+    <div class="tile"><div class="v" style="color:#7b53c1">${S.classes.length}</div><div class="l">Kelas Aktif</div></div>
+  </div>
+  ${(() => { const fs = monthSummary(ym()), late = new Date().getDate() > Number(S.settings.fee.dueDay);
+    return `<button class="feecard" id="feeCard"><div style="width:44px;height:44px;border-radius:12px;background:var(--yellow-2);display:grid;place-items:center;font-size:22px;flex:none">💰</div>
+    <div style="flex:1"><b>Yuran ${monthLabel(ym())}</b><div class="mute">${rm(fs.got)} / ${rm(fs.due)} · ${fs.paid} dibayar · <span style="color:${fs.unpaid && late ? "var(--red)" : "inherit"}">${fs.unpaid} belum</span></div>
+    <div class="progress" style="height:8px;margin-top:6px"><i style="width:${fs.pct}%"></i></div></div><span class="chev">›</span></button>`; })()}
+  <div class="h2">Tindakan Pantas</div>
+  <div class="qa">
+    <button data-q="hadir" style="background:var(--blue-2);color:var(--blue)">${ICON.check}<span style="color:var(--ink)">Kehadiran</span></button>
+    <button data-q="rekod" style="background:var(--green-2);color:var(--green)">${ICON.book}<span style="color:var(--ink)">Rekod Ngaji</span></button>
+    <button data-q="tambah" style="background:#efe7fb;color:#7b53c1">${ICON.user}<span style="color:var(--ink)">Tambah Murid</span></button>
+    <button data-q="laporan" style="background:var(--red-2);color:var(--red)">${ICON.chart}<span style="color:var(--ink)">Laporan</span></button>
+  </div>
+  ${belum.length ? `<div class="h2">Belum direkod hari ini (${belum.length})</div><div class="card" style="padding:4px 14px">${belum.map(st => `<div class="li" data-rekod="${st.id}"><div class="av ${st.gender}">${initials(st.name)}</div><div class="grow"><div class="nm">${esc(st.name)}</div><div class="mute">Mula: ${posText(startFor(st,d))}</div></div><span class="chev">›</span></div>`).join("")}</div>` : ""}`;
+};
+
+V.murid = () => {
+  topbar("Senarai Murid");
+  const q = (ui.p.q || "").toLowerCase(), f = ui.p.f || "all";
+  const cnt = {all:S.students.length, iqra:S.students.filter(s => current(s).level==="iqra").length, quran:S.students.filter(s => current(s).level==="quran").length};
+  const list = S.students.filter(s => (f==="all" || current(s).level===f) && s.name.toLowerCase().includes(q));
+  return `
+  <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Cari nama murid…" value="${esc(ui.p.q||"")}"></div>
+  <div class="chips">${[["all","Semua"],["iqra","Iqra'"],["quran","Al-Quran"]].map(([k,l]) => `<button data-f="${k}" class="${f===k?"on":""}">${l} (${cnt[k]})</button>`).join("")}</div>
+  <div class="card" style="padding:4px 14px" id="mlist">${list.length ? list.map(s => { const c = current(s), k = klass(s.classId);
+    return `<div class="li" data-profil="${s.id}"><div class="av ${s.gender}">${initials(s.name)}</div><div class="grow"><div class="nm">${esc(s.name)}</div><div class="row" style="gap:6px;margin-top:3px">${lvlPill(c)}${k?`<span class="pill cls">${esc(k.name)}</span>`:""}</div></div><span class="chev">›</span></div>`; }).join("") : `<div class="empty">Tiada murid dijumpai.</div>`}</div>
+  <button class="fab" id="fab">+</button>`;
+};
+
+V.editmurid = () => {
+  const ed = ui.p.id ? student(ui.p.id) : null;
+  topbar(ed ? "Kemaskini Murid" : "Tambah Murid", () => go(ed ? "profil" : "murid", ed ? {id:ed.id} : {}));
+  if(!S.classes.length) return `<div class="card empty">Tambah sekurang-kurangnya satu kelas dahulu sebelum menambah murid.<br><br><button class="btn sm" id="startKelas">+ Tambah kelas</button></div>`;
+  const f = ed || {name:"", gender:"L", classId:(S.classes[0]||{}).id, level:"iqra", book:1, page:1, phone:""};
+  return `<form class="card" id="sform">
+    <div class="field"><label>Nama penuh</label><input type="text" name="name" value="${esc(f.name)}" required></div>
+    <div class="grid2">
+      <div class="field"><label>Jantina</label><select name="gender"><option value="L" ${f.gender==="L"?"selected":""}>Lelaki</option><option value="P" ${f.gender==="P"?"selected":""}>Perempuan</option></select></div>
+      <div class="field"><label>Kelas / Kumpulan</label><select name="classId">${S.classes.map(c => `<option value="${c.id}" ${f.classId===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div>
+      <div class="field"><label>Tahap mula</label><select name="level"><option value="iqra" ${f.level==="iqra"?"selected":""}>Iqra'</option><option value="quran" ${f.level==="quran"?"selected":""}>Al-Quran</option></select></div>
+      <div class="field"><label>Iqra' (1–6)</label><select name="book">${[1,2,3,4,5,6].map(n => `<option ${Number(f.book)===n?"selected":""}>${n}</option>`).join("")}</select></div>
+      <div class="field"><label>Muka surat mula</label><input type="number" name="page" min="1" value="${f.page}"></div>
+      <div class="field"><label>No. telefon ibu bapa</label><input type="tel" name="phone" value="${esc(f.phone)}" placeholder="012-3456789"></div>
+      <div class="field"><label>Yuran bulanan (RM)</label><input type="number" name="fee" min="0" step="0.5" value="${f.fee ?? ""}" placeholder="Default ${S.settings.fee.amount}"></div>
+      <div class="field"><label>Mula bayar yuran</label><input type="month" name="joined" value="${f.joined || ym()}" style="border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#fff;width:100%"></div>
+    </div>
+    <p class="mute" style="margin-top:0">Yuran: biarkan kosong untuk kadar biasa, isi 0 untuk percuma (cth: anak yatim, adik-beradik).</p>
+    ${ed ? `<p class="mute" style="margin-top:0">Tahap mula hanya digunakan sebelum ada rekod bacaan.</p>` : ""}
+    <button class="btn" type="submit">${ed ? "Simpan Perubahan" : "Tambah Murid"}</button>
+    ${ed ? `<button class="btn danger" type="button" id="del" style="margin-top:10px">Padam Murid</button>` : ""}
+  </form>`;
+};
+
+V.profil = () => {
+  const st = student(ui.p.id); if(!st){ ui.screen = "murid"; ui.p = {}; return V.murid(); }
+  topbar("Kemajuan Murid", () => go("murid"));
+  const tab = ui.p.tab || "kemajuan", c = current(st), k = klass(st.classId);
+  let body = "";
+  if(tab === "kemajuan"){
+    const all = recs(st.id), total = pagesOf(c.level, c.book), p = pct(c);
+    const steps = [1,2,3,4,5,6].map(b => ({label:`Iqra' ${b}`, level:"iqra", book:b})).concat([{label:"Al-Quran", level:"quran", book:1}]);
+    const curIdx = c.level === "quran" ? 6 : c.book - 1;
+    body = `<div class="card"><b>Kedudukan Semasa</b>
+      <div class="poscard" style="margin-top:10px"><div class="row" style="gap:8px;font-weight:800;font-size:17px"><span style="color:var(--green);display:grid">${ICON.book.replace('<svg','<svg width="22" height="22"')}</span>${c.level==="iqra"?`Iqra' ${c.book}`:"Al-Quran"}</div>
+      <div class="mute" style="margin:2px 0 8px">Muka surat ${c.page} / ${total}${c.fresh?" (tahap mula)":""}</div>
+      <div class="row"><div class="progress"><i style="width:${p}%"></i></div><b>${p}%</b></div></div></div>
+      <div class="card"><b>Perjalanan Bacaan</b><div class="journey" style="margin-top:8px">${steps.map((s,i) => {
+        if(i < curIdx){ const last = all.filter(r => r.level===s.level && (s.level==="quran" || r.book===s.book)).pop();
+          return `<div class="js"><span class="dot done">${ICON.check.replace('<svg','<svg width="13" height="13"')}</span><span class="t">${s.label}</span><span class="mute">✓ Selesai${last?` (${fmt(last.date)})`:""}</span></div>`; }
+        if(i === curIdx) return `<div class="js"><span class="dot now">●</span><span class="t">${s.label}</span><span class="mute" style="color:var(--blue);font-weight:600">Sedang (m/s ${c.page} / ${total})</span></div>`;
+        return `<div class="js"><span class="dot todo"></span><span class="t" style="color:var(--mute)">${s.label}</span><span class="mute">Belum bermula</span></div>`;
+      }).join("")}</div></div>` + (() => { const ar = arrears(st), f = feeOf(st), pm = payment(st, ym());
+        return `<div class="card"><div class="row between"><b>Yuran</b><span class="mute">${f > 0 ? rm(f) + " / bulan" : "Percuma"}</span></div>
+        <div style="margin-top:8px">${f <= 0 ? '<span class="pill free">Dikecualikan</span>' : ar.length ? `<span class="pill due">Tertunggak ${ar.length} bulan · ${rm(ar.length * f)}</span><div class="mute" style="margin-top:4px">${ar.map(monthLabel).join(", ")}</div>` : `<span class="pill paid">Tiada tunggakan</span>${pm ? `<span class="mute"> · ${monthLabel(ym())} dibayar ${fmt(pm.date)}</span>` : ""}`}</div>
+        <button class="btn ghost sm" data-goyuran="1" style="margin-top:10px">Buka Yuran ›</button></div>`; })();
+  } else if(tab === "graf"){
+    const all = recs(st.id), a = attStats(st.id);
+    body = `<div class="card"><b>Kemajuan bacaan</b><div class="mute">Kedudukan bacaan dari masa ke masa</div>${progressChart(all)}</div>
+      <div class="card"><b>Kehadiran</b><div class="row" style="margin-top:8px"><div class="progress"><i style="width:${a.pct}%"></i></div><b>${a.pct}%</b></div><div class="mute" style="margin-top:4px">${a.H} hadir daripada ${a.n} sesi direkod</div></div>`;
+  } else if(tab === "sejarah"){
+    const all = recs(st.id).reverse();
+    body = `<div class="card">${all.length ? all.map(r => `<div class="tl"><div class="d">${fmt(r.date)}</div><div style="flex:1"><div>${posText(r)} <span class="pill ${r.status||"none"}">${STATUS[r.status]||"-"}</span></div>${r.note?`<div class="mute">${esc(r.note)}</div>`:""}</div></div>`).join("") : `<div class="empty">Belum ada rekod bacaan.</div>`}</div>`;
+  } else body = parentReport(st);
+  return `<div class="card row"><div class="av ${st.gender}" style="width:50px;height:50px">${initials(st.name)}</div><div class="grow"><div style="font-weight:800;font-size:17px">${esc(st.name)}</div><div class="row" style="gap:6px;margin-top:3px">${lvlPill(c)}${k?`<span class="pill cls">${esc(k.name)}</span>`:""}</div></div><button class="btn ghost sm" id="edit">Edit</button></div>
+  <div class="tabs">${[["kemajuan","Kemajuan"],["graf","Graf"],["sejarah","Sejarah"],["laporan","Laporan"]].map(([k2,l]) => `<button data-tab="${k2}" class="${tab===k2?"on":""}">${l}</button>`).join("")}</div>${body}`;
+};
+
+function attStats(id, from, to){
+  let H = 0, T = 0, C = 0;
+  for(const d of dates()){ if(from && d < from) continue; if(to && d > to) continue; const a = S.sessions[d].att[id]; if(a==="H") H++; else if(a==="T") T++; else if(a==="C") C++; }
+  const n = H + T + C; return {H, T, C, n, pct: n ? Math.round(H/n*100) : 0};
+}
+
+function progressChart(all){
+  if(all.length < 2) return `<div class="empty">Graf dipaparkan selepas sekurang-kurangnya 2 rekod bacaan.</div>`;
+  const pts = all.map(r => ({d:r.date, y:absIndex(r.level, r.book, r.to)}));
+  const W = 640, H = 220, pl = 40, pr = 12, pt = 12, pb = 30;
+  const t0 = new Date(pts[0].d).getTime(), t1 = new Date(pts[pts.length-1].d).getTime() || t0 + 1;
+  const ymin = Math.min(...pts.map(p => p.y)), ymax = Math.max(...pts.map(p => p.y)), yr = Math.max(1, ymax - ymin);
+  const X = d => pl + (t1 === t0 ? 0 : (new Date(d).getTime() - t0) / (t1 - t0)) * (W - pl - pr);
+  const Y = y => pt + (1 - (y - ymin) / yr) * (H - pt - pb);
+  const path = pts.map((p,i) => `${i?"L":"M"}${X(p.d).toFixed(1)},${Y(p.y).toFixed(1)}`).join("");
+  const area = path + `L${X(pts[pts.length-1].d).toFixed(1)},${H-pb}L${X(pts[0].d).toFixed(1)},${H-pb}Z`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:8px">
+    <line x1="${pl}" y1="${H-pb}" x2="${W-pr}" y2="${H-pb}" stroke="#ddd"/>
+    <path d="${area}" fill="#1f8a4c" opacity=".12"/><path d="${path}" fill="none" stroke="#1f8a4c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="4" fill="#1f8a4c"/>`).join("")}
+    <text x="${pl}" y="${H-8}" font-size="13" fill="#888">${fmt(pts[0].d)}</text>
+    <text x="${W-pr}" y="${H-8}" font-size="13" fill="#888" text-anchor="end">${fmt(pts[pts.length-1].d)}</text>
+    <text x="${pl-6}" y="${Y(ymax)+4}" font-size="12" fill="#888" text-anchor="end">↑</text>
+  </svg><div class="mute">Garis naik = murid bergerak ke muka surat / buku seterusnya.</div>`;
+}
+
+function parentReport(st){
+  const range = ui.p.range || "7", to = today(), from = addDays(to, -(Number(range)-1));
+  const a = attStats(st.id, from, to), rr = recs(st.id).filter(r => r.date >= from && r.date <= to);
+  const first = rr[0], last = rr[rr.length-1], c = current(st);
+  const bacaan = first ? (first.level===last.level && first.book===last.book ? `${last.level==="iqra"?"Iqra' "+last.book:"Al-Quran"} (m/s ${first.from} – ${last.to})` : `${posText(first)} → ${posText(last)}`) : "Tiada rekod";
+  const status = last ? STATUS[last.status] || "-" : "-";
+  const notes = rr.filter(r => r.note).slice(-2).map(r => r.note);
+  const text = `Assalamualaikum. Laporan Ngaji ${st.name.replace(/^Contoh:\s*/,"")}\nTempoh: ${fmt(from)} – ${fmt(to)}\n\n✅ Kehadiran: ${a.H} / ${a.n} sesi${a.n?` (${a.pct}%)`:""}\n📖 Bacaan: ${bacaan}\n📊 Status terkini: ${status}\n📍 Kedudukan semasa: ${c.level==="iqra"?"Iqra' "+c.book:"Al-Quran"} m/s ${c.page}${notes.length?`\n\n📝 Catatan Guru:\n${notes.join("\n")}`:""}\n\n— ${S.settings.teacher}`;
+  let phone = String(st.phone||"").replace(/\D/g,""); if(phone.startsWith("0")) phone = "6" + phone;
+  return `<div class="chips">${[["7","Mingguan"],["30","30 hari"],["90","90 hari"]].map(([k,l]) => `<button data-range="${k}" class="${range===k?"on":""}">${l}</button>`).join("")}</div>
+  <div class="rpt"><div class="hd"><span style="display:grid;color:var(--yellow)">${ICON.book.replace('<svg','<svg width="30" height="30"')}</span><div><b>NUR Ngaji Manager</b><div style="font-size:13px;opacity:.85">Laporan ${range==="7"?"Mingguan":range+" Hari"}</div></div></div>
+    <div class="bd"><div class="mute">Laporan Ngaji</div><div style="font-weight:800;font-size:18px">${esc(st.name)}</div><div class="mute" style="margin-bottom:6px">${fmt(from)} – ${fmt(to)}</div>
+      <div class="ln"><span style="color:var(--green)">✅</span><span><b>Kehadiran:</b> ${a.H} / ${a.n} sesi${a.n?` (${a.pct}%)`:""}</span></div>
+      <div class="ln"><span>📖</span><span><b>Bacaan:</b> ${esc(bacaan)}</span></div>
+      <div class="ln"><span>📊</span><span><b>Status:</b> ${status} ${last && last.status ? `<span class="pill ${last.status}">${STATUS[last.status]}</span>` : ""}</span></div>
+      <div class="ln"><span>📝</span><span><b>Catatan Guru:</b><br>${notes.length ? notes.map(esc).join("<br>") : '<span class="mute">Tiada catatan</span>'}</span></div>
+    </div></div>
+  ${phone ? `<a class="wa" href="https://wa.me/${phone}?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">${ICON.wa} Kongsi ke WhatsApp</a>` : `<p class="mute" style="text-align:center">Tambah no. telefon ibu bapa (butang Edit) untuk hantar terus ke WhatsApp.</p>`}
+  <button class="btn ghost" id="copyRpt" style="margin-top:10px">Salin teks laporan</button>
+  <textarea id="rptText" style="position:absolute;left:-9999px">${esc(text)}</textarea>`;
+}
+
+V.kelas = () => {
+  topbar("Kelas");
+  const tab = ui.p.tab || "kalender";
+  const tabs = `<div class="tabs"><button data-ktab="kalender" class="${tab==="kalender"?"on":""}">Kalender</button><button data-ktab="senarai" class="${tab==="senarai"?"on":""}">Senarai Kelas</button></div>`;
+  if(tab === "kalender") return tabs + calendarView();
+  const wd = new Date().getDay();
+  if(!S.classes.length) return tabs + `<div class="card empty">Belum ada kelas.</div><button class="btn" id="addk">+ Tambah kelas / kumpulan</button>`;
+  return tabs + `${S.classes.map(c => `<div class="card"><div class="row between"><div><div style="font-weight:800;font-size:16px">${esc(c.name)}</div>
+      <div class="mute">${(c.days||[]).map(d => HARI[d]).join(", ") || "Tiada hari ditetapkan"} · ${t12(c.start)} – ${t12(c.end)}</div>
+      <div class="mute">${classStudents(c.id).length} murid ${(c.days||[]).includes(wd) ? '· <b style="color:var(--green)">Ada kelas hari ini</b>' : ""}</div></div>
+      <button class="btn ghost sm" data-editk="${c.id}">Edit</button></div>
+      <button class="btn" data-hadir="${c.id}" style="margin-top:12px">Buka Kehadiran & Rekod</button></div>`).join("")}
+    ${S.classes.length > 1 ? `<button class="btn ghost" data-hadir="all">Kehadiran semua kelas</button>` : ""}
+    <button class="btn ghost" id="addk" style="margin-top:10px">+ Tambah kelas / kumpulan</button>`;
+};
+
+function calendarView(){
+  if(!S.classes.length) return `<div class="card empty">Belum ada kelas. Tambah kelas di tab <b>Senarai Kelas</b> dan kalender akan terisi mengikut jadual mingguan.</div>`;
+  const m = ui.p.cm || ym(), sel = ui.p.sel && ui.p.sel.startsWith(m) ? ui.p.sel : (m === ym() ? today() : m + "-01");
+  const [y, mo] = m.split("-").map(Number), days = new Date(y, mo, 0).getDate();
+  const lead = (new Date(y, mo-1, 1).getDay() + 6) % 7; // Isnin dulu
+  let cells = "", nPlan = 0, nCancel = 0, nGanti = 0, nHeld = 0;
+  for(let i = 0; i < lead; i++) cells += `<div class="c out"></div>`;
+  for(let dd = 1; dd <= days; dd++){
+    const d = `${m}-${String(dd).padStart(2,"0")}`, ss = sessionsOn(d);
+    ss.forEach(x => { const st = sessStatus(x, d); if(st==="cancel") nCancel++; else { nPlan++; if(x.type==="ganti") nGanti++; if(st==="held") nHeld++; } });
+    cells += `<button class="c ${d===today()?"today":""} ${d===sel?"sel":""}" data-sel="${d}">${dd}<span class="lbls">${ss.map(x => `<span class="lb st-${sessStatus(x,d)}" title="${esc(x.cls.name)}">${esc(shortName(x.cls))}</span>`).join("")}</span></button>`;
+  }
+  const ss = sessionsOn(sel);
+  return `<div class="card">
+    <div class="row between" style="margin-bottom:10px"><button class="iconbtn" data-cshift="-1">‹</button><b style="font-size:16px">${monthLabel(m)}</b><button class="iconbtn" data-cshift="1">›</button></div>
+    <div class="cal">${["Isn","Sel","Rab","Kha","Jum","Sab","Aha"].map(x => `<div class="wd">${x}</div>`).join("")}${cells}</div>
+    <div class="calleg"><span><i class="st-held"></i>Diadakan</span><span><i class="st-plan"></i>Dijadualkan</span><span><i class="st-ganti"></i>Kelas ganti</span><span><i class="st-cancel"></i>Dibatalkan</span><span><i class="st-miss"></i>Tiada rekod</span></div>
+  </div>
+  <div class="tiles" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px"><div class="tile"><div class="v">${nPlan}</div><div class="l">Kelas bulan ini</div></div><div class="tile"><div class="v" style="color:var(--green)">${nHeld}</div><div class="l">Sudah diadakan</div></div><div class="tile"><div class="v" style="color:var(--red)">${nCancel}</div><div class="l">Dibatalkan</div></div></div>
+  <div class="card"><b>${dayName(sel)}, ${fmt(sel)}</b>
+    ${ss.length ? ss.map((x, i) => { const st = sessStatus(x, sel);
+      return `<div class="sess ${st==="cancel"?"cancel":x.type==="ganti"?"ganti":""}"><div class="row between"><div><b>${esc(x.cls.name)}</b><div class="mute">${t12(x.start)} – ${t12(x.end)}${x.type==="ganti"?" · Kelas ganti/tambahan":""}</div></div><span class="pill ${st==="held"?"paid":st==="cancel"?"due":st==="ganti"?"cls":"none"}">${ST_LABEL[st]}</span></div>
+        ${x.cancelled ? `<div class="mute" style="margin-top:4px">Sebab: ${esc(x.cancelled)}</div>` : x.note ? `<div class="mute" style="margin-top:4px">${esc(x.note)}</div>` : ""}
+        <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+          ${x.cancelled ? `<button class="btn ghost sm" data-restore="${x.cls.id}">Pulihkan kelas</button>` : `<button class="btn sm" data-hadir2="${x.cls.id}">Kehadiran & Rekod ›</button>${x.type==="biasa" ? `<button class="btn ghost sm" data-cancel="${x.cls.id}">Batalkan</button>` : `<button class="btn ghost sm" data-delx="${x.xid}">Padam</button>`}`}
+        </div></div>`; }).join("") : `<div class="mute" style="padding:8px 0">Tiada kelas pada hari ini.</div>`}
+    <button class="btn ghost" id="addGanti" style="margin-top:12px">+ Tambah kelas ganti / tambahan</button>
+  </div>
+  <button class="btn ghost" id="bulkCancel">Tandakan cuti (beberapa hari)</button>`;
+}
+
+function cancelSheet(cid, d){
+  let reason = "Cuti umum";
+  const opts = ["Cuti umum","Cuti sekolah","Guru tidak sihat","Hujan / banjir","Program surau"];
+  $("modal").innerHTML = `<div class="sheet"><div class="box"><b style="font-size:17px">Batalkan ${esc(klass(cid).name)}</b><div class="mute" style="margin-bottom:12px">${dayName(d)}, ${fmt(d)}</div>
+    <div class="reasons">${opts.map((o,i) => `<button data-r="${o}" class="${i===0?"on":""}">${o}</button>`).join("")}</div>
+    <div class="field"><label>Sebab lain (pilihan)</label><input type="text" id="rOther" placeholder="cth: Majlis tahlil"></div>
+    <button class="btn" id="rYes" style="background:var(--red);color:#fff">Batalkan kelas</button><button class="btn ghost" id="rNo" style="margin-top:10px">Tutup</button></div></div>`;
+  $("modal").querySelectorAll("[data-r]").forEach(b => b.onclick = () => { reason = b.dataset.r; $("modal").querySelectorAll("[data-r]").forEach(x => x.classList.toggle("on", x === b)); });
+  $("rNo").onclick = () => $("modal").innerHTML = "";
+  $("rYes").onclick = () => { calDayW(d).cancel[cid] = $("rOther").value.trim() || reason; markDirty(); $("modal").innerHTML = ""; render(); toast("Kelas dibatalkan"); };
+}
+function gantiSheet(d){
+  const c0 = S.classes[0] || {};
+  $("modal").innerHTML = `<div class="sheet"><div class="box"><b style="font-size:17px">Kelas ganti / tambahan</b><div class="mute" style="margin-bottom:12px">${dayName(d)}, ${fmt(d)}</div>
+    <div class="field"><label>Kelas</label><select id="gCls">${S.classes.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></div>
+    <div class="grid2"><div class="field"><label>Mula</label><input type="time" id="gS" value="${c0.start||"20:00"}"></div><div class="field"><label>Tamat</label><input type="time" id="gE" value="${c0.end||"21:00"}"></div></div>
+    <div class="field"><label>Catatan (pilihan)</label><input type="text" id="gN" placeholder="cth: Ganti kelas 10 Nov"></div>
+    <button class="btn" id="gYes">Tambah</button><button class="btn ghost" id="gNo" style="margin-top:10px">Tutup</button></div></div>`;
+  $("gNo").onclick = () => $("modal").innerHTML = "";
+  $("gYes").onclick = () => { calDayW(d).extra.push({id:uid("x"), classId:$("gCls").value, start:$("gS").value, end:$("gE").value, note:$("gN").value.trim()}); markDirty(); $("modal").innerHTML = ""; render(); toast("Kelas ganti ditambah"); };
+}
+function bulkSheet(){
+  const d0 = ui.p.sel || today();
+  $("modal").innerHTML = `<div class="sheet"><div class="box"><b style="font-size:17px">Tandakan cuti</b><div class="mute" style="margin-bottom:12px">Semua kelas dalam tempoh ini akan dibatalkan.</div>
+    <div class="grid2"><div class="field"><label>Dari</label><input type="date" id="bF" value="${d0}"></div><div class="field"><label>Hingga</label><input type="date" id="bT" value="${addDays(d0, 6)}"></div></div>
+    <div class="field"><label>Sebab</label><input type="text" id="bR" value="Cuti sekolah"></div>
+    <button class="btn" id="bYes" style="background:var(--red);color:#fff">Batalkan kelas dalam tempoh ini</button><button class="btn ghost" id="bNo" style="margin-top:10px">Tutup</button></div></div>`;
+  $("bNo").onclick = () => $("modal").innerHTML = "";
+  $("bYes").onclick = () => { let f = $("bF").value, t = $("bT").value, r = $("bR").value.trim() || "Cuti"; if(!f || !t) return; if(t < f) [f, t] = [t, f];
+    let n = 0, g = 0; for(let d = f; d <= t && g++ < 400; d = addDays(d, 1)) sessionsOn(d).forEach(x => { if(x.type === "biasa" && !x.cancelled){ calDayW(d).cancel[x.cls.id] = r; n++; } });
+    $("modal").innerHTML = ""; if(n){ markDirty(); render(); } toast(n ? `${n} kelas dibatalkan` : "Tiada kelas dalam tempoh itu"); };
+}
+
+V.editkelas = () => {
+  const c = ui.p.id ? klass(ui.p.id) : null;
+  topbar(c ? "Edit Kelas" : "Tambah Kelas", () => go("kelas"));
+  const f = c || {name:"", days:[], start:"19:45", end:"20:45"};
+  ui.p.days = ui.p.days || [...(f.days||[])];
+  return `<form class="card" id="kform">
+    <div class="field"><label>Nama kelas / kumpulan</label><input type="text" name="name" value="${esc(f.name)}" required placeholder="cth: Kelas A, Kelas Lepas Maghrib"></div>
+    <div class="field"><label>Nama pendek di kalender (pilihan)</label><input type="text" name="short" maxlength="12" value="${esc(f.short||"")}" placeholder="cth: Marinee"></div>
+    <div class="field"><label>Hari kelas</label><div class="daypick">${[1,2,3,4,5,6,0].map(d => `<button type="button" data-day="${d}" class="${ui.p.days.includes(d)?"on":""}">${HARI[d].slice(0,3)}</button>`).join("")}</div></div>
+    <div class="grid2"><div class="field"><label>Mula</label><input type="time" name="start" value="${f.start}"></div><div class="field"><label>Tamat</label><input type="time" name="end" value="${f.end}"></div></div>
+    <button class="btn" type="submit">${c ? "Simpan" : "Tambah Kelas"}</button>
+    ${c && (S.classes.length > 1 || !classStudents(c.id).length) ? `<button class="btn danger" type="button" id="delk" style="margin-top:10px">Padam Kelas</button>` : ""}
+  </form>`;
+};
+
+V.hadir = () => {
+  const d = ui.p.date || today(), cid = ui.p.cid || "all", c = klass(cid);
+  topbar("Kehadiran Kelas", () => go(ui.p.from || "kelas", (ui.p.from || "kelas") === "kelas" ? {sel:d, cm:d.slice(0,7)} : {}));
+  const list = classStudents(cid), s = sess(d);
+  const marked = list.filter(st => s.att[st.id]).length;
+  if(!list.length) return `<div class="card empty">Tiada murid dalam kelas ini.<br><br><button class="btn sm" data-q="tambah">Tambah murid</button></div>`;
+  return `<div class="card row" style="background:#fafaf6"><div style="width:46px;height:46px;border-radius:12px;background:var(--yellow-2);display:grid;place-items:center;color:var(--amber);flex:none">${ICON.cal.replace('<svg','<svg width="26" height="26"')}</div>
+      <div class="grow"><div style="font-weight:800;font-size:16px">${c ? esc(c.name) : "Semua kelas"}</div><div class="mute">${dayName(d)}, ${fmt(d)}${c ? `<br>${t12(c.start)} – ${t12(c.end)}` : ""}</div></div></div>
+    ${c && calDay(d).cancel && calDay(d).cancel[c.id] ? `<div class="sess cancel" style="margin:0 0 12px">Kelas ini <b>dibatalkan</b> pada tarikh ini (${esc(calDay(d).cancel[c.id])}). Pulihkan di Kalender jika kelas tetap diadakan.</div>` : ""}
+    <div class="datebar"><button class="iconbtn" data-shift="-1">‹</button><input type="date" id="date" value="${d}"><button class="iconbtn" data-shift="1">›</button></div>
+    ${S.classes.length > 1 ? `<div class="chips"><button data-cid="all" class="${cid==="all"?"on":""}">Semua</button>${S.classes.map(k => `<button data-cid="${k.id}" class="${cid===k.id?"on":""}">${esc(k.name)}</button>`).join("")}</div>` : ""}
+    <div class="row between" style="margin:0 2px 6px"><span class="mute">✓ Hadir · ✕ Tidak hadir · 📅 Cuti/MC</span><button class="btn ghost sm" id="allH">Semua hadir</button></div>
+    <div class="card" style="padding:4px 14px">${list.map(st => { const a = s.att[st.id], r = s.rec[st.id];
+      return `<div class="li" data-id="${st.id}"><div class="av ${st.gender}">${initials(st.name)}</div><div class="grow"><div class="nm">${esc(st.name)}</div>
+        ${a==="H" ? `<button class="reclink" data-rekod="${st.id}">${r ? `<span class="pill ${r.status||"none"}">${STATUS[r.status]||"Draf"}</span> ${posText(r)} ›` : "+ Rekod ngaji ›"}</button>` : `<div class="mute">${a==="T"?"Tidak hadir":a==="C"?"Cuti / MC":lvlPill(current(st))}</div>`}</div>
+        <div class="att"><button class="H ${a==="H"?"on":""}" data-att="H" aria-label="Hadir">${ICON.check}</button><button class="T ${a==="T"?"on":""}" data-att="T" aria-label="Tidak hadir">${ICON.x}</button><button class="C ${a==="C"?"on":""}" data-att="C" aria-label="Cuti">${ICON.cal}</button></div></div>`; }).join("")}</div>
+    <button class="btn" id="saveAtt">Simpan Kehadiran (${marked}/${list.length})</button>`;
+};
+
+V.rekod = () => {
+  const st = student(ui.p.id), d = ui.p.date || today();
+  if(!st){ ui.screen = "utama"; ui.p = {}; return V.utama(); }
+  topbar("Rekod Ngaji", () => go("hadir", {date:d, cid:ui.p.cid||"all", from:ui.p.from}));
+  const tab = ui.p.tab || "hari";
+  const head = `<div class="card row"><div class="av ${st.gender}" style="width:50px;height:50px">${initials(st.name)}</div><div class="grow"><div style="font-weight:800;font-size:17px">${esc(st.name)}</div><div class="mute">${dayName(d)}, ${fmt(d)} · Terkini: ${posText({...current(st), from:current(st).page})}</div></div></div>
+    <div class="tabs"><button data-rtab="hari" class="${tab==="hari"?"on":""}">Rekod Hari Ini</button><button data-rtab="sejarah" class="${tab==="sejarah"?"on":""}">Sejarah</button></div>`;
+  if(tab === "sejarah"){
+    const all = recs(st.id).reverse();
+    return head + `<div class="card">${all.length ? all.map(r => `<div class="tl"><div class="d">${fmt(r.date)}</div><div style="flex:1"><div>${posText(r)} <span class="pill ${r.status||"none"}">${STATUS[r.status]||"-"}</span></div>${r.note?`<div class="mute">${esc(r.note)}</div>`:""}</div></div>`).join("") : `<div class="empty">Belum ada rekod.</div>`}</div>`;
+  }
+  if(!draft || draft.id !== st.id || draft.date !== d){
+    const ex = sess(d).rec[st.id];
+    draft = ex ? {...ex, id:st.id, date:d} : {...startFor(st, d), status:"", note:"", id:st.id, date:d};
+  }
+  const total = pagesOf(draft.level, draft.book);
+  const nextId = nextPresent(st.id, d);
+  return head + `<div class="card">
+    <div class="frow"><label>Jenis Bacaan</label><div class="ctl"><button type="button" class="radio ${draft.level==="iqra"?"on":""}" data-lv="iqra"><i></i>Iqra'</button><button type="button" class="radio ${draft.level==="quran"?"on":""}" data-lv="quran"><i></i>Al-Quran</button></div></div>
+    ${draft.level==="iqra" ? `<div class="frow"><label>Iqra'</label><div class="ctl"><select id="dBook">${[1,2,3,4,5,6].map(n => `<option value="${n}" ${Number(draft.book)===n?"selected":""}>Iqra' ${n}</option>`).join("")}</select></div></div>` : ""}
+    <div class="frow"><label>Muka Surat</label><div class="ctl" style="flex-wrap:nowrap">
+      <div class="stepper"><button type="button" data-pg="from" data-d="-1">−</button><input type="number" inputmode="numeric" id="dFrom" value="${draft.from}"><button type="button" data-pg="from" data-d="1">+</button></div>
+      <span>–</span>
+      <div class="stepper"><button type="button" data-pg="to" data-d="-1">−</button><input type="number" inputmode="numeric" id="dTo" value="${draft.to}"><button type="button" data-pg="to" data-d="1">+</button></div></div></div>
+    <div class="mute" style="margin:-6px 0 14px 106px">daripada ${total} muka surat</div>
+    <div style="font-weight:600;font-size:14px;margin-bottom:8px">Status</div>
+    <div class="stbtn">${Object.entries(STATUS).map(([k,l]) => `<button type="button" class="${k} ${draft.status===k?"on":""}" data-st="${k}">${l} ${k==="L"?"✓":k==="S"?"~":"↻"}</button>`).join("")}</div>
+    <div style="font-weight:600;font-size:14px;margin:14px 0 8px">Catatan Guru</div>
+    <textarea id="dNote" placeholder="cth: Tajwid panjang 2 harakat, makhraj huruf qaf perlu diperbaiki">${esc(draft.note||"")}</textarea>
+    ${sess(d).rec[st.id] ? `<button type="button" class="reclink" id="dDel" style="color:var(--red);margin-top:8px">Padam rekod hari ini</button>` : ""}
+  </div>
+  <button class="btn" id="dSave">💾 Simpan Rekod</button>
+  ${nextId ? `<button class="btn ghost" id="dNext" style="margin-top:10px">Simpan & seterusnya: ${esc(student(nextId).name)} ›</button>` : ""}`;
+};
+function nextPresent(id, d){
+  const list = classStudents(ui.p.cid || "all"), s = sess(d);
+  const i = list.findIndex(x => x.id === id);
+  for(let k = 1; k <= list.length; k++){ const st = list[(i + k) % list.length]; if(st.id !== id && s.att[st.id] === "H" && !s.rec[st.id]) return st.id; }
+  return null;
+}
+
+V.laporan = () => {
+  topbar("Laporan & Analisis");
+  const tab = ui.p.tab || "hadir";
+  const months = [...new Set(dates().map(d => d.slice(0,7)).concat([today().slice(0,7)]))].sort().reverse();
+  const m = ui.p.m && months.includes(ui.p.m) ? ui.p.m : months[0];
+  const [yy, mm] = m.split("-").map(Number);
+  const from = `${m}-01`, last = new Date(yy, mm, 0).getDate(), to = `${m}-${String(last).padStart(2,"0")}`;
+  let body = "";
+  if(tab === "hadir"){
+    let H=0,T=0,C=0; S.students.forEach(st => { const a = attStats(st.id, from, to); H+=a.H; T+=a.T; C+=a.C; });
+    const n = H+T+C, p = x => n ? Math.round(x/n*100) : 0;
+    const weeks = [[1,7],[8,14],[15,21],[22,last]].map(([a,b]) => { let h=0,t=0; S.students.forEach(st => { const s = attStats(st.id, `${m}-${String(a).padStart(2,"0")}`, `${m}-${String(b).padStart(2,"0")}`); h+=s.H; t+=s.n; }); return t ? Math.round(h/t*100) : null; });
+    const perStudent = S.students.map(st => ({st, a:attStats(st.id, from, to)})).sort((x,y) => x.a.pct - y.a.pct);
+    body = `<div class="card"><div class="row" style="gap:18px;flex-wrap:wrap">${donut([[H,"#1f8a4c"],[T,"#d0453c"],[C,"#b9bdb9"]], n ? p(H)+"%" : "–", "Kehadiran Keseluruhan")}
+        <div class="legend"><div><i style="background:#1f8a4c"></i>Hadir<b>${p(H)}%</b></div><div><i style="background:#d0453c"></i>Tidak Hadir<b>${p(T)}%</b></div><div><i style="background:#b9bdb9"></i>Cuti / MC<b>${p(C)}%</b></div><div class="mute">${n} rekod kehadiran</div></div></div></div>
+      <div class="card"><b>Trend Kehadiran (4 Minggu)</b>${trendChart(weeks)}</div>
+      <div class="card"><b>Kehadiran ikut murid</b><table class="t" style="margin-top:6px"><tr><th>Murid</th><th>Hadir</th><th>%</th></tr>${perStudent.map(({st,a}) => `<tr><td>${esc(st.name)}</td><td>${a.H}/${a.n}</td><td style="font-weight:700;color:${a.n && a.pct<75?"var(--red)":"var(--ink)"}">${a.n?a.pct+"%":"-"}</td></tr>`).join("")}</table><div class="mute" style="margin-top:6px">Merah = kehadiran bawah 75%</div></div>`;
+  } else if(tab === "yuran"){
+    const ms = [5,4,3,2,1,0].map(i => addMonth(m, -i)).filter(x => x >= S.settings.fee.startMonth);
+    const data = ms.map(x => ({m:x, ...monthSummary(x)}));
+    const owing = S.students.map(st => ({st, ar:arrears(st)})).filter(x => x.ar.length).sort((a,b) => b.ar.length - a.ar.length);
+    const totalOwe = owing.reduce((a, x) => a + x.ar.length * feeOf(x.st), 0);
+    const ms0 = monthSummary(m);
+    body = `<div class="tiles" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px"><div class="tile"><div class="v" style="color:var(--green);font-size:18px">${rm(ms0.got)}</div><div class="l">Kutipan ${BULAN[mm-1]}</div></div><div class="tile"><div class="v" style="font-size:18px">${ms0.pct}%</div><div class="l">Kadar bayaran</div></div><div class="tile"><div class="v" style="color:var(--red);font-size:18px">${rm(totalOwe)}</div><div class="l">Jumlah tertunggak</div></div></div>
+      <div class="card"><b>Kutipan vs sasaran</b>${feeBars(data)}</div>
+      <div class="card"><b>Senarai tertunggak</b>${owing.length ? `<table class="t" style="margin-top:6px"><tr><th>Murid</th><th>Bulan</th><th>Jumlah</th></tr>${owing.map(x => `<tr data-profil="${x.st.id}" style="cursor:pointer"><td>${esc(x.st.name)}</td><td>${x.ar.length}</td><td style="font-weight:700;color:var(--red)">${rm(x.ar.length * feeOf(x.st))}</td></tr>`).join("")}</table>` : `<div class="mute" style="padding:8px 0">Tiada tunggakan. Alhamdulillah.</div>`}</div>
+      <button class="btn" data-goyuran="1">Buka Yuran Bulanan</button>`;
+  } else {
+    const rows = S.students.map(st => { const rr = recs(st.id).filter(r => r.date >= from && r.date <= to);
+      const lulus = rr.filter(r => r.status==="L").reduce((a,r) => a + Math.max(1, r.to - r.from + 1), 0);
+      const ulang = rr.filter(r => r.status==="U").length; return {st, lulus, ulang, n:rr.length, c:current(st)}; }).sort((a,b) => b.lulus - a.lulus);
+    body = `<div class="card"><b>Kemajuan ${BULAN_P[mm-1]}</b><table class="t" style="margin-top:6px"><tr><th>Murid</th><th>M/S lulus</th><th>Ulang</th><th>Kedudukan</th></tr>${rows.map(r => `<tr data-profil="${r.st.id}" style="cursor:pointer"><td>${esc(r.st.name)}</td><td style="font-weight:700;color:var(--green)">${r.lulus}</td><td style="color:${r.ulang>2?"var(--red)":"inherit"}">${r.ulang}</td><td>${r.c.level==="iqra"?"Iqra' "+r.c.book:"Quran"} m/s ${r.c.page}</td></tr>`).join("")}</table>
+      <div class="mute" style="margin-top:6px">Ulang lebih 2 kali sebulan ditanda merah. Tekan nama untuk profil murid.</div></div>`;
+  }
+  return `<div class="tabs"><button data-ltab="hadir" class="${tab==="hadir"?"on":""}">Kehadiran</button><button data-ltab="maju" class="${tab==="maju"?"on":""}">Kemajuan</button><button data-ltab="yuran" class="${tab==="yuran"?"on":""}">Yuran</button></div>
+    <select id="month" style="margin-bottom:12px">${months.map(x => { const [a,b] = x.split("-").map(Number); return `<option value="${x}" ${x===m?"selected":""}>${BULAN_P[b-1]} ${a}</option>`; }).join("")}</select>${body}`;
+};
+function donut(parts, big, small){
+  const tot = parts.reduce((a,p) => a + p[0], 0), r = 52, C = 2*Math.PI*r; let off = 0;
+  const segs = tot ? parts.filter(p => p[0]).map(([v,col]) => { const len = v/tot*C; const s = `<circle r="${r}" cx="70" cy="70" fill="none" stroke="${col}" stroke-width="18" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`; off += len; return s; }).join("") : `<circle r="${r}" cx="70" cy="70" fill="none" stroke="#e6e3da" stroke-width="18"/>`;
+  return `<svg viewBox="0 0 140 140" width="150" height="150">${segs}<text x="70" y="70" text-anchor="middle" font-size="26" font-weight="800" fill="#1c2420">${big}</text><text x="70" y="88" text-anchor="middle" font-size="9.5" fill="#6c736e">${small}</text></svg>`;
+}
+function trendChart(w){
+  const W = 640, H = 200, pl = 44, pr = 16, pt = 12, pb = 28, X = i => pl + i*(W-pl-pr)/3, Y = v => pt + (1 - v/100)*(H-pt-pb);
+  const pts = w.map((v,i) => v==null ? null : [X(i), Y(v)]).filter(Boolean);
+  const path = pts.map((p,i) => `${i?"L":"M"}${p[0]},${p[1]}`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:8px">
+    ${[0,20,40,60,80,100].map(v => `<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#eee"/><text x="${pl-8}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="#888">${v}%</text>`).join("")}
+    ${pts.length > 1 ? `<path d="${path}L${pts[pts.length-1][0]},${H-pb}L${pts[0][0]},${H-pb}Z" fill="#1f8a4c" opacity=".12"/><path d="${path}" fill="none" stroke="#1f8a4c" stroke-width="3"/>` : ""}
+    ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#1f8a4c"/>`).join("")}
+    ${w.map((v,i) => `<text x="${X(i)}" y="${H-6}" font-size="13" text-anchor="middle" fill="#888">M${i+1}${v==null?"":` · ${v}%`}</text>`).join("")}
+  </svg>${pts.length ? "" : `<div class="mute">Belum ada kehadiran direkod bulan ini.</div>`}`;
+}
+
+function feeBars(d){
+  if(!d.length) return `<div class="mute">Tiada data.</div>`;
+  const W = 640, H = 210, pl = 50, pb = 30, pt = 14, max = Math.max(1, ...d.map(x => Math.max(x.due, x.got)));
+  const bw = (W - pl - 10) / d.length, Y = v => pt + (1 - v/max) * (H - pt - pb);
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;margin-top:8px">
+    ${[0, .5, 1].map(f => `<line x1="${pl}" x2="${W-10}" y1="${Y(max*f)}" y2="${Y(max*f)}" stroke="#eee"/><text x="${pl-6}" y="${Y(max*f)+4}" font-size="12" text-anchor="end" fill="#888">${Math.round(max*f)}</text>`).join("")}
+    ${d.map((x,i) => { const cx = pl + i*bw + bw/2, w = Math.min(46, bw*.6);
+      return `<rect x="${cx-w/2}" y="${Y(x.due)}" width="${w}" height="${H-pb-Y(x.due)}" rx="5" fill="#e9e5d9"/><rect x="${cx-w/2}" y="${Y(x.got)}" width="${w}" height="${H-pb-Y(x.got)}" rx="5" fill="#1f8a4c"/><text x="${cx}" y="${H-10}" font-size="12.5" text-anchor="middle" fill="#888">${BULAN[Number(x.m.slice(5))-1]}</text>`; }).join("")}
+  </svg><div class="row" style="gap:14px;font-size:12.5px;color:var(--mute)"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#1f8a4c"></i> Dikutip</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e9e5d9"></i> Sasaran (RM)</span></div>`;
+}
+
+V.yuran = () => {
+  topbar("Yuran Bulanan", () => go(ui.p.from || "laporan", ui.p.from === "profil" ? {id:ui.p.sid} : (ui.p.from === "laporan" ? {tab:"yuran"} : {})));
+  const m = ui.p.m || ym(), yf = ui.p.yf || "all", fs = monthSummary(m);
+  const late = m < ym() || (m === ym() && new Date().getDate() > Number(S.settings.fee.dueDay));
+  const list = S.students.filter(st => activeIn(st, m)).filter(st => yf === "all" || (yf === "paid" ? !!payment(st, m) : owes(st, m)));
+  return `<div class="feehead"><div class="mnav"><button data-mshift="-1">‹</button><b style="font-size:16px">${monthLabel(m)}</b><button data-mshift="1">›</button></div>
+      <div style="font-size:13px;opacity:.8">Kutipan</div><div class="big">${rm(fs.got)} <span style="font-size:15px;font-weight:500;opacity:.75">/ ${rm(fs.due)}</span></div>
+      <div class="row" style="margin-top:8px"><div class="progress"><i style="width:${fs.pct}%"></i></div><b>${fs.pct}%</b></div>
+      <div style="font-size:13px;margin-top:8px;opacity:.85">${fs.paid} dibayar · ${fs.unpaid} belum${fs.free ? ` · ${fs.free} percuma` : ""} · Tarikh akhir: ${S.settings.fee.dueDay} haribulan</div></div>
+    <div class="chips">${[["all","Semua"],["unpaid","Belum bayar"],["paid","Sudah bayar"]].map(([k,l]) => `<button data-yf="${k}" class="${yf===k?"on":""}">${l}</button>`).join("")}</div>
+    <div class="card" style="padding:4px 14px">${list.length ? list.map(st => { const p = payment(st, m), f = feeOf(st), ar = arrears(st).length;
+      const pill = p ? `<span class="pill paid">✓ ${fmt(p.date)}</span>` : f <= 0 ? `<span class="pill free">Percuma</span>` : `<span class="pill ${late ? "due" : "none"}">${late ? "Lewat" : "Belum"}</span>`;
+      return `<div class="li" data-pay="${st.id}" style="cursor:pointer"><div class="av ${st.gender}">${initials(st.name)}</div><div class="grow"><div class="nm">${esc(st.name)}</div>
+        <div class="mute">${p ? `${rm(p.amt)} · ${esc(p.method)}` : f > 0 ? rm(f) : "Dikecualikan"}${ar > 1 ? ` · <span style="color:var(--red);font-weight:600">${ar} bulan tertunggak</span>` : ""}</div></div>${pill}</div>`; }).join("") : `<div class="empty">${m < S.settings.fee.startMonth ? "Rekod yuran bermula " + monthLabel(S.settings.fee.startMonth) + "." : "Tiada murid dalam senarai ini."}</div>`}</div>
+    <p class="mute" style="text-align:center">Tekan nama murid untuk rekod bayaran, hantar resit atau peringatan.</p>`;
+};
+
+function paySheet(id, m){
+  const st = student(id), p = payment(st, m), f = feeOf(st), ph = waNum(st.phone);
+  const close = () => $("modal").innerHTML = "";
+  if(p){
+    $("modal").innerHTML = `<div class="sheet"><div class="box"><div class="row between"><b style="font-size:17px">${esc(st.name)}</b><span class="pill paid">Dibayar</span></div>
+      <div class="mute" style="margin-bottom:10px">${monthLabel(m)}</div>
+      <div class="report" style="white-space:pre-wrap;background:#f7f5ef;border-radius:12px;padding:12px;font-size:14px">${esc(receiptText(st, m))}</div>
+      ${ph ? `<a class="wa" href="https://wa.me/${ph}?text=${encodeURIComponent(receiptText(st, m))}" target="_blank" rel="noopener">${ICON.wa} Hantar resit WhatsApp</a>` : `<p class="mute">Tiada no. telefon ibu bapa untuk WhatsApp.</p>`}
+      <div class="grid2" style="margin-top:10px"><button class="btn ghost" id="pCopy">Salin resit</button><button class="btn ghost" id="pClose">Tutup</button></div>
+      <button class="reclink" id="pUndo" style="color:var(--red);margin-top:12px">Batalkan bayaran ini</button><div id="pUndoBox"></div></div></div>`;
+    $("pClose").onclick = close;
+    $("pCopy").onclick = () => copyText(receiptText(st, m), "Resit disalin");
+    $("pUndo").onclick = () => { $("pUndoBox").innerHTML = `<div class="grid2" style="margin-top:8px"><button class="btn ghost" id="uNo">Tidak</button><button class="btn" id="uYes" style="background:var(--red);color:#fff">Ya, batalkan</button></div>`;
+      $("uNo").onclick = () => $("pUndoBox").innerHTML = "";
+      $("uYes").onclick = () => { delete S.fees[m][id]; if(!Object.keys(S.fees[m]).length) delete S.fees[m]; markDirty(); close(); render(); toast("Bayaran dibatalkan"); }; };
+    return;
+  }
+  let method = METHODS[0];
+  const ar = arrears(st);
+  $("modal").innerHTML = `<div class="sheet"><div class="box"><b style="font-size:17px">${esc(st.name)}</b><div class="mute" style="margin-bottom:12px">Rekod bayaran ${monthLabel(m)}${ar.length > 1 ? ` · <span style="color:var(--red)">${ar.length} bulan tertunggak</span>` : ""}</div>
+    <div class="grid2"><div class="field"><label>Jumlah (RM)</label><input type="number" id="pAmt" min="0" step="0.5" value="${f}"></div><div class="field"><label>Tarikh bayar</label><input type="date" id="pDate" value="${today()}"></div></div>
+    <div class="field"><label>Kaedah</label><div class="methods">${METHODS.map((x,i) => `<button type="button" data-m="${x}" class="${i===0?"on":""}">${x}</button>`).join("")}</div></div>
+    <div class="field"><label>Catatan (pilihan)</label><input type="text" id="pNote" placeholder="cth: bayar 2 bulan sekali"></div>
+    <button class="btn green" id="pSave">✓ Tandakan Dibayar</button>
+    ${ar.length && ph ? `<a class="wa" style="background:#fff;color:#1f9d55;border:1.5px solid #1f9d55" href="https://wa.me/${ph}?text=${encodeURIComponent(reminderText(st))}" target="_blank" rel="noopener">${ICON.wa} Hantar peringatan yuran</a>` : ""}
+    <button class="btn ghost" id="pClose" style="margin-top:10px">Batal</button></div></div>`;
+  $("modal").querySelectorAll("[data-m]").forEach(b => b.onclick = () => { method = b.dataset.m; $("modal").querySelectorAll("[data-m]").forEach(x => x.classList.toggle("on", x === b)); });
+  $("pClose").onclick = close;
+  $("pSave").onclick = () => {
+    const amt = Math.max(0, Number($("pAmt").value) || 0);
+    S.fees[m] = S.fees[m] || {};
+    const n = Object.keys(S.fees).reduce((a, k) => a + Object.keys(S.fees[k]).length, 0) + 1;
+    S.fees[m][id] = {amt, date:$("pDate").value || today(), method, note:$("pNote").value.trim(), no:`R${m.replace("-","")}-${String(n).padStart(3,"0")}`};
+    markDirty(); render(); paySheet(id, m); toast("Bayaran direkod");
+  };
+}
+
+V.tetapan = () => {
+  topbar("Kelas & Tetapan");
+  return `<form class="card" id="setform"><b>Profil Guru</b>
+      <div class="field" style="margin-top:10px"><label>Nama dipaparkan (cth: Ustaz Iqbal)</label><input type="text" name="teacher" value="${esc(S.settings.teacher)}"></div>
+      <b>Jumlah muka surat setiap buku Iqra'</b><div class="mute" style="margin-bottom:8px">Ikut buku yang anda guna. Digunakan untuk bar kemajuan dan naik buku automatik.</div>
+      <div class="grid2" style="grid-template-columns:repeat(3,1fr)">${S.settings.iqraPages.map((v,i) => `<div class="field"><label>Iqra' ${i+1}</label><input type="number" min="1" name="ip${i}" value="${v}"></div>`).join("")}</div>
+      <b>Yuran bulanan</b><div class="mute" style="margin-bottom:8px">Kadar biasa. Kadar khas setiap murid boleh ditetapkan di profil murid.</div>
+      <div class="grid2"><div class="field"><label>Yuran (RM / bulan)</label><input type="number" min="0" step="0.5" name="feeAmt" value="${S.settings.fee.amount}"></div><div class="field"><label>Tarikh akhir bayar (haribulan)</label><input type="number" min="1" max="28" name="dueDay" value="${S.settings.fee.dueDay}"></div></div>
+      <div class="field"><label>Maklumat bayaran (dimasukkan dalam mesej peringatan)</label><textarea name="payInfo" placeholder="cth: Maybank 1234 5678 9012 (Nama Guru) atau DuitNow 012-3456789">${esc(S.settings.fee.payInfo)}</textarea></div>
+      <button class="btn" type="submit">Simpan Tetapan</button></form>
+    <div class="card"><b>Pengurusan</b><div class="grid2" style="margin-top:10px"><button class="btn ghost sm" data-nav2="kelas" style="width:100%">Kelas / Kumpulan</button><button class="btn ghost sm" data-nav2="murid" style="width:100%">Senarai Murid</button></div></div>
+    <div class="card"><b>Sandaran data</b><div class="mute" style="margin-bottom:10px">Data hanya disimpan dalam peranti ini. Muat turun fail sandaran setiap minggu dan simpan di Google Drive / WhatsApp. Fail yang sama boleh dibuka di peranti lain.${S.settings.lastBackup ? `<br>Sandaran terakhir: <b>${fmt(iso(S.settings.lastBackup))}</b>` : "<br><b>Belum pernah buat sandaran.</b>"}</div>
+      <button class="btn sm" id="bkFile" style="width:100%">⬇ Muat turun fail sandaran</button>
+      <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" id="bkOpen" style="width:100%">Pulihkan dari fail</button><button class="btn ghost sm" id="bkCopy" style="width:100%">Salin sebagai teks</button></div>
+      <button class="reclink" id="bkRestore" style="margin-top:8px">Pulihkan dari teks</button>
+      <input type="file" id="bkInput" accept=".json,application/json" style="display:none"></div>
+    <div class="card"><b>Pasang app</b><div class="mute" style="margin:4px 0 10px">${isStandalone() ? "✓ App sudah dipasang di peranti ini." : installEvt ? "Pasang di skrin utama supaya boleh dibuka seperti app biasa, tanpa internet." : /iphone|ipad/i.test(navigator.userAgent) ? "iPhone: buka dalam Safari → butang Kongsi → <b>Add to Home Screen</b>." : "Android/Chrome: menu ⋮ → <b>Pasang app</b> / <b>Add to Home screen</b>."}</div>${installEvt && !isStandalone() ? `<button class="btn sm" id="installBtn">Pasang NUR Ngaji</button>` : ""}</div>
+    <div class="card"><b>Padam semua data</b><div class="mute" style="margin:4px 0 10px">Kosongkan app sepenuhnya. Buat sandaran dahulu.</div><button class="btn danger sm" id="wipeAll">Padam semua data</button></div>
+    <div class="card"><b>Fasa 2 (akan datang)</b><div class="mgrid" style="margin-top:10px"><div>Rekod Hafazan</div><div>Rakaman Audio</div><div>Ramai Guru</div><div>Log Masuk</div><div>Sandaran Cloud</div></div></div>
+    <p class="mute" style="text-align:center">NUR Ngaji Manager v${APP_VERSION}</p>`;
+};
+
+/* ---------- render + bind ---------- */
+function render(){
+  const v = V[ui.screen] ? ui.screen : "utama";
+  $("app").innerHTML = V[v]();
+  bnav(); bind();
+}
+function bind(){
+  const app = $("app"), on = (sel, fn) => app.querySelectorAll(sel).forEach(el => el.onclick = e => fn(el, e));
+  on("[data-hadir]", el => go("hadir", {cid:el.dataset.hadir, date:today(), from:ui.screen}));
+  on("[data-rekod]", (el,e) => { e.stopPropagation(); go("rekod", {id:el.dataset.rekod, date:ui.p.date || today(), cid:ui.p.cid || "all", from:ui.screen==="hadir"?ui.p.from:ui.screen}); });
+  on("[data-profil]", el => go("profil", {id:el.dataset.profil}));
+  on("[data-q]", el => { const q = el.dataset.q;
+    if(q==="hadir" || q==="rekod"){ const tc = todaysClasses(); go("hadir", {cid: tc.length===1 ? tc[0].id : "all", date:today(), from:"utama"}); }
+    else if(q==="tambah") go("editmurid"); else go("laporan"); });
+  on("[data-nav2]", el => go(el.dataset.nav2));
+
+  /* murid list */
+  const q = $("q"); if(q) q.oninput = () => { ui.p.q = q.value; saveUI(); const pos = q.selectionStart; render(); const n = $("q"); n.focus(); n.setSelectionRange(pos,pos); };
+  on("[data-f]", el => { ui.p.f = el.dataset.f; saveUI(); render(); });
+  if($("fab")) $("fab").onclick = () => go("editmurid");
+
+  /* edit murid */
+  const sf = $("sform");
+  if(sf){ sf.onsubmit = e => { e.preventDefault(); const fd = new FormData(sf);
+      const data = {name:fd.get("name").trim(), gender:fd.get("gender"), classId:fd.get("classId"), level:fd.get("level"), book:Number(fd.get("book"))||1, page:Math.max(1, Number(fd.get("page"))||1), phone:fd.get("phone").trim(), fee: fd.get("fee") === "" ? null : Math.max(0, Number(fd.get("fee"))), joined: fd.get("joined") || ym()};
+      if(!data.name) return;
+      if(ui.p.id){ Object.assign(student(ui.p.id), data); markDirty(); toast("Dikemaskini"); go("profil", {id:ui.p.id}); }
+      else { const id = uid("s"); S.students.push({id, ...data}); markDirty(); toast("Murid ditambah"); go("murid"); } };
+    if($("del")) $("del").onclick = () => confirmBox(`Padam ${student(ui.p.id).name}?`, "Semua rekod kehadiran dan bacaan murid ini akan dipadam.", () => {
+      const id = ui.p.id; S.students = S.students.filter(s => s.id !== id); for(const d in S.sessions){ delete S.sessions[d].att[id]; delete S.sessions[d].rec[id]; } markDirty(); go("murid"); toast("Dipadam"); });
+  }
+
+  /* profil */
+  if($("edit")) $("edit").onclick = () => go("editmurid", {id:ui.p.id});
+  on("[data-tab]", el => { ui.p.tab = el.dataset.tab; saveUI(); render(); });
+  on("[data-range]", el => { ui.p.range = el.dataset.range; saveUI(); render(); });
+  if($("copyRpt")) $("copyRpt").onclick = () => copyText($("rptText").value, "Laporan disalin");
+
+  /* kelas */
+  on("[data-editk]", el => go("editkelas", {id:el.dataset.editk}));
+  on("[data-ktab]", el => { ui.p.tab = el.dataset.ktab; saveUI(); render(); });
+  on("[data-cshift]", el => { ui.p.cm = addMonth(ui.p.cm || ym(), Number(el.dataset.cshift)); ui.p.sel = null; saveUI(); render(); });
+  on("[data-sel]", el => { ui.p.sel = el.dataset.sel; saveUI(); render(); });
+  on("[data-hadir2]", el => go("hadir", {cid:el.dataset.hadir2, date:ui.p.sel || today(), from:"kelas"}));
+  on("[data-cancel]", el => cancelSheet(el.dataset.cancel, ui.p.sel || today()));
+  on("[data-restore]", el => { const d = ui.p.sel || today(); delete calDayW(d).cancel[el.dataset.restore]; cleanCal(d); markDirty(); render(); toast("Kelas dipulihkan"); });
+  on("[data-delx]", el => { const d = ui.p.sel || today(), c = calDayW(d); c.extra = c.extra.filter(x => x.id !== el.dataset.delx); cleanCal(d); markDirty(); render(); toast("Kelas ganti dipadam"); });
+  if($("addGanti")) $("addGanti").onclick = () => gantiSheet(ui.p.sel || today());
+  if($("bulkCancel")) $("bulkCancel").onclick = bulkSheet;
+  if($("addk")) $("addk").onclick = () => go("editkelas");
+  on("[data-day]", el => { const d = Number(el.dataset.day); const i = ui.p.days.indexOf(d); i<0 ? ui.p.days.push(d) : ui.p.days.splice(i,1); el.classList.toggle("on"); saveUI(); });
+  const kf = $("kform");
+  if(kf){ kf.onsubmit = e => { e.preventDefault(); const fd = new FormData(kf); const data = {name:fd.get("name").trim(), short:(fd.get("short")||"").trim(), days:[...ui.p.days].sort(), start:fd.get("start"), end:fd.get("end")};
+      if(!data.name) return; if(ui.p.id) Object.assign(klass(ui.p.id), data); else S.classes.push({id:uid("k"), ...data}); markDirty(); toast("Kelas disimpan"); go("kelas"); };
+    if($("delk")) $("delk").onclick = () => confirmBox(`Padam ${klass(ui.p.id).name}?`, S.classes.length > 1 ? "Murid dalam kelas ini akan dipindah ke kelas pertama. Rekod tidak dipadam." : "Kelas ini akan dipadam.", () => {
+      const id = ui.p.id; S.classes = S.classes.filter(c => c.id !== id); S.students.forEach(s => { if(s.classId === id) s.classId = (S.classes[0]||{}).id; });
+      for(const d in S.calendar){ const c = S.calendar[d]; if(c.cancel) delete c.cancel[id]; if(c.extra) c.extra = c.extra.filter(x => x.classId !== id); cleanCal(d); }
+      markDirty(); go("kelas", {tab:"senarai"}); });
+  }
+
+  /* kehadiran */
+  const di = $("date"); if(di) di.onchange = () => { ui.p.date = di.value || today(); saveUI(); render(); };
+  on("[data-shift]", el => { ui.p.date = addDays(ui.p.date || today(), Number(el.dataset.shift)); saveUI(); render(); });
+  on("[data-cid]", el => { ui.p.cid = el.dataset.cid; saveUI(); render(); });
+  if($("allH")) $("allH").onclick = () => { const s = sessW(ui.p.date || today()); classStudents(ui.p.cid).forEach(st => { if(!s.att[st.id]) s.att[st.id] = "H"; }); markDirty(); render(); };
+  on(".li[data-id] [data-att]", el => { const id = el.closest("[data-id]").dataset.id, s = sessW(ui.p.date || today()), k = el.dataset.att;
+    if(s.att[id] === k) delete s.att[id]; else s.att[id] = k;
+    if(s.att[id] !== "H" && s.rec[id]) delete s.rec[id];
+    markDirty(); render(); });
+  if($("saveAtt")) $("saveAtt").onclick = () => save();
+
+  /* rekod */
+  on("[data-rtab]", el => { ui.p.tab = el.dataset.rtab; saveUI(); render(); });
+  if(draft && ui.screen === "rekod" && (ui.p.tab||"hari") === "hari"){
+    const sync = () => { const f = $("dFrom"), t = $("dTo"), n = $("dNote"), b = $("dBook");
+      if(f) draft.from = Math.max(1, Number(f.value)||1); if(t) draft.to = Math.max(1, Number(t.value)||1); if(n) draft.note = n.value; if(b) draft.book = Number(b.value); };
+    on("[data-lv]", el => { sync(); draft.level = el.dataset.lv; if(draft.level==="quran") draft.book = 1; render(); });
+    if($("dBook")) $("dBook").onchange = () => { sync(); render(); };
+    on("[data-pg]", el => { sync(); const k = el.dataset.pg; draft[k] = Math.max(1, Number(draft[k]) + Number(el.dataset.d)); if(k==="from" && draft.to < draft.from) draft.to = draft.from; if(k==="to" && draft.to < draft.from) draft.from = draft.to; render(); });
+    ["dFrom","dTo","dNote"].forEach(id => { if($(id)) $(id).onchange = sync; });
+    on("[data-st]", el => { sync(); draft.status = el.dataset.st; render(); });
+    const commit = () => { sync();
+      if(!draft.status){ toast("Pilih status dahulu"); return false; }
+      if(draft.to < draft.from) [draft.from, draft.to] = [draft.to, draft.from];
+      const max = pagesOf(draft.level, draft.book); draft.to = Math.min(draft.to, max); draft.from = Math.min(draft.from, draft.to);
+      const s = sessW(draft.date); s.att[draft.id] = "H";
+      s.rec[draft.id] = {level:draft.level, book:draft.book, from:draft.from, to:draft.to, status:draft.status, note:(draft.note||"").trim()};
+      markDirty(); return true; };
+    if($("dSave")) $("dSave").onclick = () => { if(commit()){ const d = draft.date; draft = null; toast("Rekod disimpan"); go("hadir", {date:d, cid:ui.p.cid||"all", from:ui.p.from}); } };
+    if($("dNext")) $("dNext").onclick = () => { const nx = nextPresent(draft.id, draft.date); if(commit()){ const d = draft.date; draft = null; toast("Rekod disimpan"); go("rekod", {id:nx, date:d, cid:ui.p.cid||"all", from:ui.p.from}); } };
+    if($("dDel")) $("dDel").onclick = () => { delete sessW(draft.date).rec[draft.id]; const d = draft.date; draft = null; markDirty(); go("hadir", {date:d, cid:ui.p.cid||"all", from:ui.p.from}); };
+  }
+
+  /* laporan */
+  on("[data-ltab]", el => { ui.p.tab = el.dataset.ltab; saveUI(); render(); });
+  if($("month")) $("month").onchange = () => { ui.p.m = $("month").value; saveUI(); render(); };
+
+  /* yuran */
+  if($("feeCard")) $("feeCard").onclick = () => go("yuran", {from:"utama"});
+  on("[data-goyuran]", () => go("yuran", ui.screen === "profil" ? {from:"profil", sid:ui.p.id} : {from:ui.screen}));
+  on("[data-mshift]", el => { ui.p.m = addMonth(ui.p.m || ym(), Number(el.dataset.mshift)); saveUI(); render(); });
+  on("[data-yf]", el => { ui.p.yf = el.dataset.yf; saveUI(); render(); });
+  on("[data-pay]", el => paySheet(el.dataset.pay, ui.p.m || ym()));
+
+  /* tetapan */
+  const setf = $("setform");
+  if(setf) setf.onsubmit = e => { e.preventDefault(); const fd = new FormData(setf);
+    S.settings.teacher = fd.get("teacher").trim() || "Ustaz";
+    S.settings.iqraPages = [0,1,2,3,4,5].map(i => Math.max(1, Number(fd.get("ip"+i)) || 30));
+    S.settings.fee.amount = Math.max(0, Number(fd.get("feeAmt")) || 0);
+    S.settings.fee.dueDay = Math.min(28, Math.max(1, Number(fd.get("dueDay")) || 7));
+    S.settings.fee.payInfo = fd.get("payInfo").trim();
+    markDirty(); toast("Tetapan dikemaskini"); render(); };
+  if($("bkCopy")) $("bkCopy").onclick = () => { S.settings.lastBackup = Date.now(); save(true); copyText(JSON.stringify(S), "Sandaran disalin"); };
+  if($("bkFile")) $("bkFile").onclick = backupFile;
+  if($("bkNow")) $("bkNow").onclick = backupFile;
+  if($("startKelas")) $("startKelas").onclick = () => go("editkelas");
+  if($("bkOpen")) $("bkOpen").onclick = () => $("bkInput").click();
+  if($("bkInput")) $("bkInput").onchange = async e => { const f = e.target.files[0]; if(!f) return;
+    try { const d = JSON.parse(await f.text()); confirmBox("Pulihkan data dari fail?", `Data semasa akan diganti dengan ${d.students ? d.students.length : 0} murid dari fail ${f.name}.`, () => { try { restoreData(d); } catch(err){ toast("Fail sandaran tidak sah"); } }, "Ya, pulihkan"); }
+    catch(err){ toast("Fail sandaran tidak sah"); } e.target.value = ""; };
+  if($("installBtn")) $("installBtn").onclick = async () => { installEvt.prompt(); await installEvt.userChoice; installEvt = null; render(); };
+  if($("wipeAll")) $("wipeAll").onclick = () => confirmBox("Padam semua data?", "Semua kelas, murid, rekod, yuran dan kalender akan dipadam dari peranti ini. Tindakan ini tidak boleh dibatalkan.", () => {
+    S = JSON.parse(document.getElementById("state").textContent); S.settings.fee.startMonth = ym(); migrate(); ensureFee(); save(true); go("utama"); toast("Semua data dipadam"); });
+  if($("bkRestore")) $("bkRestore").onclick = () => {
+    $("modal").innerHTML = `<div class="sheet"><div class="box"><b>Pulihkan data</b><p class="mute">Tampal teks sandaran di bawah. Data semasa akan diganti.</p><textarea id="rsTxt" style="min-height:120px"></textarea><div class="grid2" style="margin-top:10px"><button class="btn ghost" id="rsNo">Batal</button><button class="btn" id="rsYes">Pulihkan</button></div></div></div>`;
+    $("rsNo").onclick = () => $("modal").innerHTML = "";
+    $("rsYes").onclick = () => { try { const d = JSON.parse($("rsTxt").value); if(!d.students || !d.sessions) throw 0; $("modal").innerHTML = ""; restoreData(d); } catch(e){ toast("Teks sandaran tidak sah"); } };
+  };
+}
+
+function confirmBox(title, msg, yes, label = "Ya, padam"){
+  $("modal").innerHTML = `<div class="sheet"><div class="box"><b style="font-size:17px">${esc(title)}</b><p class="mute">${esc(msg)}</p><div class="grid2"><button class="btn ghost" id="cNo">Batal</button><button class="btn" id="cYes" style="background:var(--red);color:#fff">${label}</button></div></div></div>`;
+  $("cNo").onclick = () => $("modal").innerHTML = "";
+  $("cYes").onclick = () => { $("modal").innerHTML = ""; yes(); };
+}
+async function copyText(t, okMsg){
+  try { await navigator.clipboard.writeText(t); toast(okMsg); }
+  catch(e){ $("modal").innerHTML = `<div class="sheet"><div class="box"><b>Salin teks ini</b><p class="mute">Tekan lama dan pilih Salin.</p><textarea style="min-height:140px" readonly>${esc(t)}</textarea><button class="btn" id="cpOk" style="margin-top:10px">Tutup</button></div></div>`; $("cpOk").onclick = () => $("modal").innerHTML = ""; }
+}
+
+/* ---------- start ---------- */
+let installEvt = null;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if(ui.screen === "tetapan") render(); });
+window.addEventListener("appinstalled", () => { installEvt = null; toast("App dipasang ✓"); });
+window.addEventListener("pagehide", () => { if(dirty) save(true); });
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "hidden" && dirty) save(true); });
+render();
+if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+if("serviceWorker" in navigator && location.protocol !== "file:"){
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    reg.addEventListener("updatefound", () => { const nw = reg.installing; nw && nw.addEventListener("statechange", () => {
+      if(nw.state === "installed" && navigator.serviceWorker.controller){ toast("Versi baru tersedia — tutup & buka semula app"); } }); });
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>
